@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65ee56362a78df6429a7b609ec0db5dc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319592
+  packageName: Archery Target
+  packageVersion: 1.0
+  assetPath: Assets/Glowing Rifts/Archery Target/Materials/Target.mat
+  uploadId: 755052
