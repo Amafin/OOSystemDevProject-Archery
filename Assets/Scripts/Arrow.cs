@@ -6,6 +6,7 @@ public class Arrow : MonoBehaviour
 {
     public float lifeTime = 20f;
     public float touchLifeTime = 2f;
+    public Collider grabZone;   // la zone de saisie, éteinte en vol
 
     public XRGrabInteractable Grab { get; private set; }
     public bool IsNocked { get; private set; }
@@ -28,6 +29,7 @@ public class Arrow : MonoBehaviour
 
     public void Launch(Vector3 velocity)
     {
+        if (grabZone != null) grabZone.enabled = false;  // en vol, seule la pointe touche
         IsNocked = false;
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

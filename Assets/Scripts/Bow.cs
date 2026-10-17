@@ -10,6 +10,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     [Header("Références")]
     public Transform stringBone;            // l'os String
     public SkinnedMeshRenderer bowRenderer; // le maillage avec la shape key Bend
+    public Transform arrowRest;             // l'appui de la flèche, sur le côté de la poignée
 
     [Header("Mains")]
     public Transform leftHand;              // XR Origin > Camera Offset > Left Controller
@@ -29,7 +30,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
 
     XRGrabInteractable grab;
     Vector3 restLocal;               // position de repos de la corde
-    Vector3 pullAxisLocal;           // direction poignée -> corde
+    Vector3 pullAxisLocal;           // direction repose-flèche -> corde
     Quaternion attachLocalRotation;  // rotation de l'AttachPoint par rapport à l'arc
     float currentPull;
     Transform pullingHand;
@@ -41,7 +42,10 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         grab = GetComponent<XRGrabInteractable>();
         grab.selectFilters.Add(this);
         restLocal = transform.InverseTransformPoint(stringBone.position);
-        pullAxisLocal = restLocal.normalized;
+
+        // l'axe de tir va du repose-flèche vers la corde
+        Vector3 arrowRestLocal = arrowRest != null ? transform.InverseTransformPoint(arrowRest.position) : Vector3.zero;
+        pullAxisLocal = (restLocal - arrowRestLocal).normalized;
 
         Transform attach = grab.attachTransform != null ? grab.attachTransform : transform;
         attachLocalRotation = Quaternion.Inverse(transform.rotation) * attach.rotation;
@@ -120,7 +124,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     {
         if (!grab.isSelected) return;
 
-        // quelle main tient l'arc ? l'autre doit amener une flèche
+        // quelle main tient l'arc ? l'autre est la main libre
         Transform holder = grab.firstInteractorSelecting.transform;
         bool leftHolds = holder.IsChildOf(leftHand);
         Transform freeHand = leftHolds ? rightHand : leftHand;
@@ -128,12 +132,13 @@ public class Bow : MonoBehaviour, IXRSelectFilter
 
         Arrow arrow = FindHeldArrowNearString(freeHand);
 
+        // la main libre est-elle sur la corde ?
         Vector3 stringRestWorld = transform.TransformPoint(restLocal);
         bool handOnString = Vector3.Distance(freeHand.position, stringRestWorld) <= grabRadius;
 
         if (arrow != null && freeGrip.IsPressed())
         {
-            // la main lâche la flèche, qui se pose sur la corde ; la même main tire
+            // une flèche est amenée sur la corde : on l'encoche et on tire
             var arrowHolder = arrow.Grab.firstInteractorSelecting;
             arrow.Grab.interactionManager.SelectExit(arrowHolder, arrow.Grab);
             arrow.Nock();
@@ -145,9 +150,10 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         }
         else if (arrow == null && handOnString && freeGrip.WasPressedThisFrame())
         {
+            // main vide qui attrape la corde : on tire sans flèche
             pullingHand = freeHand;
             pullingGrip = freeGrip;
-            grab.trackRotation = false;   // c'est notre code qui oriente l'arc pendant la tension
+            grab.trackRotation = false;
         }
     }
 
@@ -155,7 +161,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     Arrow FindHeldArrowNearString(Transform freeHand)
     {
         Vector3 stringRestWorld = transform.TransformPoint(restLocal);
-        foreach (Collider c in Physics.OverlapSphere(stringRestWorld, grabRadius))
+        foreach (Collider c in Physics.OverlapSphere(stringRestWorld, grabRadius, ~0, QueryTriggerInteraction.Collide))
         {
             Arrow arrow = c.GetComponentInParent<Arrow>();
             if (arrow == null || arrow.IsNocked || !arrow.Grab.isSelected) continue;
@@ -193,10 +199,21 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         return -transform.TransformDirection(pullAxisLocal);
     }
 
+    // repères visibles uniquement dans l'éditeur
     private void OnDrawGizmosSelected()
     {
         if (stringBone == null) return;
+
+        // zone où la main peut attraper la corde
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(stringBone.position, grabRadius);
+
+        // trajet de la flèche : de la corde, en passant par le repose-flèche
+        if (arrowRest != null)
+        {
+            Gizmos.color = Color.red;
+            Vector3 dir = (arrowRest.position - stringBone.position).normalized;
+            Gizmos.DrawLine(stringBone.position, stringBone.position + dir * 1f);
+        }
     }
 }
