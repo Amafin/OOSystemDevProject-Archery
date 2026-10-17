@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Anchor
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -15,11 +14,11 @@ TagManager:
   - Environment
   - GroundLayer
   - WallLayer
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Target
+  - Player
+  - Bow
+  - Arrow
+  - Enemy
   - 
   - 
   - 
