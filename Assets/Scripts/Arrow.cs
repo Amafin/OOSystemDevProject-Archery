@@ -1,10 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
 public class Arrow : MonoBehaviour
 {
     public float lifeTime = 20f;
+    public float touchLifeTime = 2f;
+
+    public XRGrabInteractable Grab { get; private set; }
+    public bool IsNocked { get; private set; }
 
     Rigidbody rb;
     bool flying;
@@ -12,33 +16,39 @@ public class Arrow : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        Grab = GetComponent<XRGrabInteractable>();
+    }
+
+    public void Nock()
+    {
+        IsNocked = true;
+        Grab.enabled = false;
         rb.isKinematic = true;
     }
 
-    public void Launch (Vector3 Velocity)
+    public void Launch(Vector3 velocity)
     {
+        IsNocked = false;
         rb.isKinematic = false;
-        rb.linearVelocity = Velocity;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        rb.linearVelocity = velocity;
         flying = true;
-        rb.isKinematic = false;
         Destroy(gameObject, lifeTime);
     }
 
     private void FixedUpdate()
     {
-        // flèche orienté dans le sens de la trajectoire
         if (flying && rb.linearVelocity.sqrMagnitude > 1f)
-        {
             rb.MoveRotation(Quaternion.LookRotation(rb.linearVelocity));
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!flying) return;
         flying = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
         transform.SetParent(collision.transform, true);
+        Destroy(gameObject, touchLifeTime);
     }
-
 }

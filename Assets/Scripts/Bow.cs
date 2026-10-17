@@ -10,14 +10,13 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     [Header("Références")]
     public Transform stringBone;            // l'os String
     public SkinnedMeshRenderer bowRenderer; // le maillage avec la shape key Bend
-    public Arrow arrowPrefab;               // laisser vide pour tester sans flèche
 
     [Header("Mains")]
     public Transform leftHand;              // XR Origin > Camera Offset > Left Controller
     public Transform rightHand;             // XR Origin > Camera Offset > Right Controller
     public InputActionReference leftGrip;   // XRI Left Interaction/Select
     public InputActionReference rightGrip;  // XRI Right Interaction/Select
-    public float grabRadius = 0.15f;        // distance main-corde pour attraper (m)
+    public float grabRadius = 0.15f;        // distance flèche-corde pour encocher (m)
 
     [Header("Réglages")]
     public float maxDraw = 0.5f;        // tirage max en mètres
@@ -29,8 +28,9 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     public float Draw01 { get; private set; } // tension de la corde de 0 à 1
 
     XRGrabInteractable grab;
-    Vector3 restLocal;     // position de repos de la corde
-    Vector3 pullAxisLocal; // direction poignée -> corde
+    Vector3 restLocal;               // position de repos de la corde
+    Vector3 pullAxisLocal;           // direction poignée -> corde
+    Quaternion attachLocalRotation;  // rotation de l'AttachPoint par rapport à l'arc
     float currentPull;
     Transform pullingHand;
     InputAction pullingGrip;
@@ -42,6 +42,9 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         grab.selectFilters.Add(this);
         restLocal = transform.InverseTransformPoint(stringBone.position);
         pullAxisLocal = restLocal.normalized;
+
+        Transform attach = grab.attachTransform != null ? grab.attachTransform : transform;
+        attachLocalRotation = Quaternion.Inverse(transform.rotation) * attach.rotation;
     }
 
     private void OnDestroy()
@@ -49,35 +52,29 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         if (grab != null) grab.selectFilters.Remove(this);
     }
 
-    // ---- Filtre : une seule main peut tenir l'arc ----
+    // une seule main peut tenir l'arc
     public bool canProcess => isActiveAndEnabled;
 
     public bool Process(IXRSelectInteractor interactor, IXRSelectInteractable interactable)
     {
-        if (!grab.isSelected) return true; // personne ne tient l'arc : on peut le prendre
-
+        if (!grab.isSelected) return true;
         foreach (var holder in grab.interactorsSelecting)
-        {
-            if (holder == interactor) return true; // la main qui tient déjà l'arc le garde
-        }
-        return false; // une autre main essaie de le prendre : refusé
+            if (holder == interactor) return true;
+        return false;
     }
 
-    // ---- Corde ----
+    // Corde
     private void LateUpdate()
     {
         if (pullingHand == null)
-        {
             TryStartPull();
-        }
         else if (!grab.isSelected || !pullingGrip.IsPressed())
-        {
             ReleaseString();
-        }
 
         if (pullingHand != null)
         {
-            // position de la main projetée sur l'axe de tir
+            AimWithBothHands();
+
             Vector3 handLocal = transform.InverseTransformPoint(pullingHand.position);
             float pull = Vector3.Dot(handLocal - restLocal, pullAxisLocal);
             currentPull = Mathf.Clamp(pull, 0f, maxDraw);
@@ -98,31 +95,75 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         }
     }
 
+    // pendant la tension, l'arc vise de la main de la corde vers la main de l'arc
+    void AimWithBothHands()
+    {
+        // le point de la main qui tient l'arc
+        Transform handAttach = grab.firstInteractorSelecting.GetAttachTransform(grab);
+
+        // direction de visée : de la main de la corde vers la main de l'arc
+        Vector3 aimDirection = (handAttach.position - pullingHand.position).normalized;
+
+        // 1. l'orientation que l'arc aurait si la main seule le tenait
+        Quaternion handRotation = handAttach.rotation * Quaternion.Inverse(attachLocalRotation);
+
+        // 2. on la tourne juste assez pour viser vers la main de la corde
+        Vector3 handShootDir = handRotation * -pullAxisLocal;
+        transform.rotation = Quaternion.FromToRotation(handShootDir, aimDirection) * handRotation;
+
+        // la poignée reste dans la main
+        Transform attach = grab.attachTransform != null ? grab.attachTransform : transform;
+        transform.position += handAttach.position - attach.position;
+    }
+
     void TryStartPull()
     {
-        // il faut d'abord tenir l'arc
         if (!grab.isSelected) return;
 
-        // quelle main tient l'arc ? l'autre peut tirer la corde
+        // quelle main tient l'arc ? l'autre doit amener une flèche
         Transform holder = grab.firstInteractorSelecting.transform;
         bool leftHolds = holder.IsChildOf(leftHand);
         Transform freeHand = leftHolds ? rightHand : leftHand;
         InputAction freeGrip = leftHolds ? rightGrip.action : leftGrip.action;
 
-        Vector3 stringRestWorld = transform.TransformPoint(restLocal);
-        bool closeEnough = Vector3.Distance(freeHand.position, stringRestWorld) <= grabRadius;
+        Arrow arrow = FindHeldArrowNearString(freeHand);
+        if (arrow == null || !freeGrip.IsPressed()) return;
 
-        if (closeEnough && freeGrip.WasPressedThisFrame())
+        // la main lâche la flèche, qui se pose sur la corde ; la même main tire
+        var arrowHolder = arrow.Grab.firstInteractorSelecting;
+        arrow.Grab.interactionManager.SelectExit(arrowHolder, arrow.Grab);
+        arrow.Nock();
+        IgnoreBowCollisions(arrow);
+        nockedArrow = arrow;
+        pullingHand = freeHand;
+        pullingGrip = freeGrip;
+        grab.trackRotation = false;   // c'est notre code qui oriente l'arc pendant la tension
+    }
+
+    // une flèche tenue par la main libre, près de la corde ?
+    Arrow FindHeldArrowNearString(Transform freeHand)
+    {
+        Vector3 stringRestWorld = transform.TransformPoint(restLocal);
+        foreach (Collider c in Physics.OverlapSphere(stringRestWorld, grabRadius))
         {
-            pullingHand = freeHand;
-            pullingGrip = freeGrip;
-            if (arrowPrefab != null && nockedArrow == null)
-                nockedArrow = Instantiate(arrowPrefab);
+            Arrow arrow = c.GetComponentInParent<Arrow>();
+            if (arrow == null || arrow.IsNocked || !arrow.Grab.isSelected) continue;
+            if (arrow.Grab.firstInteractorSelecting.transform.IsChildOf(freeHand)) return arrow;
         }
+        return null;
+    }
+
+    // la flèche ne doit jamais toucher l'arc qui la tire
+    void IgnoreBowCollisions(Arrow arrow)
+    {
+        foreach (Collider arrowCol in arrow.GetComponentsInChildren<Collider>())
+            foreach (Collider bowCol in GetComponentsInChildren<Collider>())
+                Physics.IgnoreCollision(arrowCol, bowCol);
     }
 
     void ReleaseString()
     {
+        grab.trackRotation = true;    // l'arc reprend l'orientation de la main
         bool stillHeld = grab.isSelected;
         pullingHand = null;
         pullingGrip = null;
@@ -141,7 +182,6 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         return -transform.TransformDirection(pullAxisLocal);
     }
 
-    // affiche la zone de prise de la corde dans la vue Scene
     private void OnDrawGizmosSelected()
     {
         if (stringBone == null) return;
