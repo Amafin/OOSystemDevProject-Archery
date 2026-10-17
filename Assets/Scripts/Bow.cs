@@ -127,17 +127,28 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         InputAction freeGrip = leftHolds ? rightGrip.action : leftGrip.action;
 
         Arrow arrow = FindHeldArrowNearString(freeHand);
-        if (arrow == null || !freeGrip.IsPressed()) return;
 
-        // la main lâche la flèche, qui se pose sur la corde ; la même main tire
-        var arrowHolder = arrow.Grab.firstInteractorSelecting;
-        arrow.Grab.interactionManager.SelectExit(arrowHolder, arrow.Grab);
-        arrow.Nock();
-        IgnoreBowCollisions(arrow);
-        nockedArrow = arrow;
-        pullingHand = freeHand;
-        pullingGrip = freeGrip;
-        grab.trackRotation = false;   // c'est notre code qui oriente l'arc pendant la tension
+        Vector3 stringRestWorld = transform.TransformPoint(restLocal);
+        bool handOnString = Vector3.Distance(freeHand.position, stringRestWorld) <= grabRadius;
+
+        if (arrow != null && freeGrip.IsPressed())
+        {
+            // la main lâche la flèche, qui se pose sur la corde ; la même main tire
+            var arrowHolder = arrow.Grab.firstInteractorSelecting;
+            arrow.Grab.interactionManager.SelectExit(arrowHolder, arrow.Grab);
+            arrow.Nock();
+            IgnoreBowCollisions(arrow);
+            nockedArrow = arrow;
+            pullingHand = freeHand;
+            pullingGrip = freeGrip;
+            grab.trackRotation = false;   // c'est notre code qui oriente l'arc pendant la tension
+        }
+        else if (arrow == null && handOnString && freeGrip.WasPressedThisFrame())
+        {
+            pullingHand = freeHand;
+            pullingGrip = freeGrip;
+            grab.trackRotation = false;   // c'est notre code qui oriente l'arc pendant la tension
+        }
     }
 
     // une flèche tenue par la main libre, près de la corde ?
