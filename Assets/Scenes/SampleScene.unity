@@ -513,7 +513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4c62ff17b4c1a469fa046610b1d16b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowQuiver
-  arrowPrefab: {fileID: 6628568547352205498, guid: c9798999ee2b1e6498130a827f44e55c, type: 3}
+  arrowPrefab: {fileID: 8303609399139639251, guid: 206ccf01c8f8b9740b1a2a0f8b92318c, type: 3}
   quiverRadius: 0.2
   rightHand: {fileID: 1553301289}
   leftHand: {fileID: 1679025466}
@@ -901,9 +901,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Target
   center: {fileID: 164652495}
-  radius: 0.5
-  maxPoints: 100
+  radius: 0.6
+  minFaceAlignment: 0.7
   hitTextPrefab: {fileID: 6947828063904079557, guid: cf2772568ad33874f8c66e22b6e829f8, type: 3}
+  showRingDebug: 1
 --- !u!114 &1203602293 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8095668283459231490, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
@@ -3177,15 +3178,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4308708929755546512, guid: 83f23c0fc22f57e4780f8ad4c5c17be0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.25219
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4308708929755546512, guid: 83f23c0fc22f57e4780f8ad4c5c17be0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7382
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4308708929755546512, guid: 83f23c0fc22f57e4780f8ad4c5c17be0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4308708929755546512, guid: 83f23c0fc22f57e4780f8ad4c5c17be0, type: 3}
       propertyPath: m_LocalRotation.w

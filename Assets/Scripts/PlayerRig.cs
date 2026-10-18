@@ -14,7 +14,7 @@ public class PlayerRig : MonoBehaviour
     public XRBaseInteractor rightInteractor;    // Right Controller > Near-Far Interactor
     public XRBaseInteractor leftInteractor;
 
-    public void Awake()
+    private void Awake()
     {
         Instance = this;
     }

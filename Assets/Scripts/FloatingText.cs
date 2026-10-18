@@ -9,9 +9,20 @@ public class FloatingText : MonoBehaviour
     TextMeshPro text;
     float timer;
 
-    private void Awake() { text = GetComponent<TextMeshPro>(); }
+    private void Awake()
+    {
+        text = GetComponent<TextMeshPro>();
+    }
 
-    public void SetPoints(int points) { text.text = "+" + points; }
+    public void SetPoints(int points)
+    {
+        SetText("+" + points);
+    }
+
+    public void SetText(string message)
+    {
+        text.text = message;
+    }
 
     private void Update()
     {

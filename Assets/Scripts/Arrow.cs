@@ -13,6 +13,8 @@ public class Arrow : MonoBehaviour
 
     Rigidbody rb;
     bool flying;
+    public Transform tip;
+    Vector3 lastVelocity;          // vitesse juste avant le choc
 
     private void Awake()
     {
@@ -40,7 +42,9 @@ public class Arrow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (flying && rb.linearVelocity.sqrMagnitude > 1f)
+        if (!flying) return;
+        lastVelocity = rb.linearVelocity;   // mémorisation de la vitesse avant un éventuel choc
+        if (rb.linearVelocity.sqrMagnitude > 1f)
             rb.MoveRotation(Quaternion.LookRotation(rb.linearVelocity));
     }
 
@@ -49,17 +53,32 @@ public class Arrow : MonoBehaviour
         if (!flying) return;
         flying = false;
 
+        // point exact d'impact
+        ContactPoint contact = collision.GetContact(0);
+
+        // orienter la flèche selon la normale de l'impact
+        if (lastVelocity.sqrMagnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.LookRotation(lastVelocity);
+        }
+
+        // position : pointe bien sur le point d'impact
+        if (tip != null)
+            transform.position += contact.point - tip.position;
+
+        // effacer le rebond et figer la flèche
+        rb.linearVelocity = Vector3.zero;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.isKinematic = true;
+        transform.SetParent(collision.transform, true);
+
         // cible touché ?
         Target target = collision.collider.GetComponentInParent<Target>();
         if (target != null && ScoreManager.Instance != null)
         {
-            ContactPoint contact = collision.GetContact(0);   // le point exact de l'impact
             ScoreManager.Instance.AddPoints(target.GetPoints(contact.point, contact.normal));
         }
 
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        rb.isKinematic = true;
-        transform.SetParent(collision.transform, true);
         Destroy(gameObject, touchLifeTime);
     }
 }

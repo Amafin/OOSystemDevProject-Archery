@@ -64,10 +64,10 @@ MonoBehaviour:
     UI and other examples of best-practices for VR development.
   preview: {fileID: -313791287703854912}
   dependencies:
-  - dependency: {fileID: 11400000, guid: 0f906c94e2aa0c3488832acc1db04295, type: 2}
-    instantiationMode: 1
   - dependency: {fileID: 2100000, guid: 99685157b02e4d446bbecb015645e5e8, type: 2}
     instantiationMode: 0
+  - dependency: {fileID: 11400000, guid: 0f906c94e2aa0c3488832acc1db04295, type: 2}
+    instantiationMode: 1
   - dependency: {fileID: 2472133408010223955, guid: 4d28f6590e91f644e9731292f51c4f2c, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2100000, guid: b0e96864bafcfb54894bb238ad56cf3b, type: 2}
@@ -124,11 +124,13 @@ MonoBehaviour:
     instantiationMode: 0
   - dependency: {fileID: 2218496723442559054, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
     instantiationMode: 0
+  - dependency: {fileID: 2793455350518958582, guid: 206ccf01c8f8b9740b1a2a0f8b92318c, type: 3}
+    instantiationMode: 0
   - dependency: {fileID: 919132149155446097, guid: 7eff605df5fc69141bad762b74fb9228, type: 3}
     instantiationMode: 0
-  - dependency: {fileID: 919132149155446097, guid: 49090752ee8bba242ad64a291905ee10, type: 3}
-    instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 889c29b5f6792af478de77054e2d2618, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 919132149155446097, guid: 49090752ee8bba242ad64a291905ee10, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2100000, guid: 991176033d609b047a8b00723cc5f418, type: 2}
     instantiationMode: 0
@@ -199,8 +201,6 @@ MonoBehaviour:
   - dependency: {fileID: 2800000, guid: 006f56ebf315c064bbbb7df154e89565, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 42c318ae1ee85b549b2928d582a95efc, type: 3}
-    instantiationMode: 0
-  - dependency: {fileID: 8776677202640440657, guid: c9798999ee2b1e6498130a827f44e55c, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 4742849934296659264, guid: cf2772568ad33874f8c66e22b6e829f8, type: 3}
     instantiationMode: 0
