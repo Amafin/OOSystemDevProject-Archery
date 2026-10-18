@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
     public float duration = 60f; // durée du niveau en secondes
     public TextMeshProUGUI timerText; // texte du timer
     private float timeLeft; // temps restant en secondes
-    bool running; // indique si le timer tourne
+    public bool IsRunning { get; private set; } // indique si le niveau est en cours
 
     private void Awake()
     {
@@ -22,18 +22,18 @@ public class LevelManager : MonoBehaviour
     {
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
-        running = true;
+        IsRunning = true;
     }
 
     private void Update()
     {
-        if (running)
+        if (IsRunning)
         {
             timeLeft -= Time.deltaTime;
             if (timeLeft <= 0f)
             {
                 timeLeft = 0f;
-                running = false;
+                IsRunning = false;
                 EndLevel();
             }
             UpdateTimerText();

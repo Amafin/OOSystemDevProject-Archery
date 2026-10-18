@@ -40,6 +40,9 @@ public class ScoreManager : MonoBehaviour
 
     public void AddPoints(int points)
     {
+        // un niveau existe mais il est terminé : on ne compte plus rien
+        if (LevelManager.Instance != null && !LevelManager.Instance.IsRunning) return;
+
         Score += points;
         UpdateGauge();
     }
