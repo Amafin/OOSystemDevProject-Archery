@@ -72,12 +72,13 @@ public class Arrow : MonoBehaviour
         rb.isKinematic = true;
         transform.SetParent(collision.transform, true);
 
-        // cible touché ?
-        Target target = collision.collider.GetComponentInParent<Target>();
-        if (target != null && ScoreManager.Instance != null)
+        // l'objet touché sait-il réagir à une flèche ?
+        IArrowHittable hittable = collision.collider.GetComponentInParent<IArrowHittable>();
+        if (hittable != null) 
         {
-            ScoreManager.Instance.AddPoints(target.GetPoints(contact.point, contact.normal));
+            hittable.OnArrowHit(contact.point, contact.normal);
         }
+            
 
         Destroy(gameObject, touchLifeTime);
     }

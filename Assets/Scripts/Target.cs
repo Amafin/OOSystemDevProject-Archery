@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Target : MonoBehaviour
+public class Target : MonoBehaviour, IArrowHittable
 {
     [Header("Cible")]
     public Transform center;      // objet Center, au milieu du jaune, flèche bleue (Z) vers le joueur
@@ -13,6 +13,14 @@ public class Target : MonoBehaviour
     public bool showRingDebug = false;   // affiche aussi la distance en anneaux, pour calibrer
 
     // score classique : 10 anneaux de même largeur, 10 points au centre, 1 au bord
+
+    // appelée par la flèche quand elle touche la cible
+    public void OnArrowHit(Vector3 hitPoint, Vector3 surfaceNormal)
+    {
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.AddPoints(GetPoints(hitPoint, surfaceNormal));
+    }
+
     public int GetPoints(Vector3 hitPoint, Vector3 surfaceNormal)
     {
         // la flèche doit toucher la face avant (pas la tranche ni l'arrière)
