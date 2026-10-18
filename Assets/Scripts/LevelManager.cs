@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
         IsRunning = true;
+        if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
     }
 
     private void Update()
@@ -74,5 +75,7 @@ public class LevelManager : MonoBehaviour
             bestText.text = "Meilleur : " + bestScore;
 
         if (resultPanel != null) resultPanel.SetActive(true);   // on montre les résultats
+
+        if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
     }
 }

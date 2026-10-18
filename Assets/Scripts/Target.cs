@@ -3,22 +3,28 @@ using UnityEngine;
 public class Target : MonoBehaviour, IArrowHittable
 {
     [Header("Cible")]
-    public Transform center;      // objet Center, au milieu du jaune, flèche bleue (Z) vers le joueur
-    public float radius = 0.5f;   // rayon de la cible jusqu'au bord du blanc (m)
+    public Transform center; // objet Center, au milieu du jaune, flèche bleue (Z) vers le joueur
+    public float radius = 0.5f;  // rayon de la cible jusqu'au bord du blanc (m)
     [Range(0f, 1f)]
-    public float minFaceAlignment = 0.7f;   // en dessous, la flèche a touché la tranche ou l'arrière
+    public float minFaceAlignment = 0.7f;  // en dessous, la flèche a touché la tranche ou l'arrière
 
-    [Header("Retour visuel")]
-    public FloatingText hitTextPrefab;   // texte flottant à instancier quand on touche la cible
-    public bool showRingDebug = false;   // affiche aussi la distance en anneaux, pour calibrer
+    public event System.Action OnHit; // le spawner sera prévenu quand la cible est touchée
+    bool wasHit; // une cible ne compte qu'une fois
 
-    // score classique : 10 anneaux de même largeur, 10 points au centre, 1 au bord
 
     // appelée par la flèche quand elle touche la cible
     public void OnArrowHit(Vector3 hitPoint, Vector3 surfaceNormal)
     {
+        if (wasHit) return;
+
+        int points = GetPoints(hitPoint, surfaceNormal);
+        if (points <= 0) return;  // tranche ou bord : la cible reste en place
+
+        wasHit = true;
         if (ScoreManager.Instance != null)
-            ScoreManager.Instance.AddPoints(GetPoints(hitPoint, surfaceNormal));
+            ScoreManager.Instance.AddPoints(points);
+
+        OnHit?.Invoke(); // on prévient le spawner
     }
 
     public int GetPoints(Vector3 hitPoint, Vector3 surfaceNormal)
@@ -34,20 +40,9 @@ public class Target : MonoBehaviour, IArrowHittable
 
         int points = 10 - Mathf.FloorToInt(ring);
 
-        // texte flottant : une copie du prefab, rangée dans une variable locale
-        if (hitTextPrefab != null)
-        {
-            FloatingText hitText = Instantiate(hitTextPrefab, hitPoint + faceNormal * 0.05f, Quaternion.identity);
-            if (showRingDebug)
-                hitText.SetText("+" + points + " (" + ring.ToString("0.0") + ")");
-            else
-                hitText.SetPoints(points);
-        }
-
         return points;
     }
 
-    // repères visibles uniquement dans l'éditeur
     private void OnDrawGizmosSelected()
     {
         if (center == null) return;

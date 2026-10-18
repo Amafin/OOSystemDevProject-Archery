@@ -14,7 +14,7 @@ public class ArrowQuiver : MonoBehaviour
     public Transform leftHand;
     public InputActionReference rightGrip;  // XRI Right Interaction/Select
     public InputActionReference leftGrip;
-    public XRBaseInteractor rightInteractor;    // Right Controller > Near-Far Interactor
+    public XRBaseInteractor rightInteractor; // Right Controller > Near-Far Interactor
     public XRBaseInteractor leftInteractor;
 
  
