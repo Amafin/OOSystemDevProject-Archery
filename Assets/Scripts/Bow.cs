@@ -18,6 +18,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     public InputActionReference leftGrip;   // XRI Left Interaction/Select
     public InputActionReference rightGrip;  // XRI Right Interaction/Select
     public float grabRadius = 0.15f;        // distance flèche-corde pour encocher (m)
+    public float nockRadius = 0.1f;        // distance encoche-corde pour encocher (m)
 
     [Header("Réglages")]
     public float maxDraw = 0.5f;        // tirage max en mètres
@@ -165,6 +166,10 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         {
             Arrow arrow = c.GetComponentInParent<Arrow>();
             if (arrow == null || arrow.IsNocked || !arrow.Grab.isSelected) continue;
+
+            // l'encoche (pivot de la flèche) doit être tout près de la corde
+            if (Vector3.Distance(arrow.transform.position, stringRestWorld) > nockRadius) continue;
+
             if (arrow.Grab.firstInteractorSelecting.transform.IsChildOf(freeHand)) return arrow;
         }
         return null;
@@ -185,7 +190,6 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         pullingHand = null;
         pullingGrip = null;
         if (nockedArrow == null) return;
-
         if (stillHeld && Draw01 >= minDrawToFire)
             nockedArrow.Launch(ShootDirection() * Draw01 * maxArrowSpeed);
         else
@@ -207,6 +211,10 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         // zone où la main peut attraper la corde
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(stringBone.position, grabRadius);
+
+        // zone où l'encoche de la flèche s'accroche
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(stringBone.position, nockRadius);
 
         // trajet de la flèche : de la corde, en passant par le repose-flèche
         if (arrowRest != null)
