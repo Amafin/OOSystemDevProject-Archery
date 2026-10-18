@@ -48,6 +48,15 @@ public class Arrow : MonoBehaviour
     {
         if (!flying) return;
         flying = false;
+
+        // cible touché ?
+        Target target = collision.collider.GetComponentInParent<Target>();
+        if (target != null && ScoreManager.Instance != null)
+        {
+            ContactPoint contact = collision.GetContact(0);   // le point exact de l'impact
+            ScoreManager.Instance.AddPoints(target.GetPoints(contact.point, contact.normal));
+        }
+
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
         transform.SetParent(collision.transform, true);

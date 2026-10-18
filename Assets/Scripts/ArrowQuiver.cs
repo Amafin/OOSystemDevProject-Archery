@@ -17,6 +17,18 @@ public class ArrowQuiver : MonoBehaviour
     public XRBaseInteractor rightInteractor;    // Right Controller > Near-Far Interactor
     public XRBaseInteractor leftInteractor;
 
+ 
+       private void Start()
+    {
+        if (leftHand == null) leftHand = PlayerRig.Instance.leftHand;
+        if (rightHand == null) rightHand = PlayerRig.Instance.rightHand;
+        if (leftGrip == null) leftGrip = PlayerRig.Instance.leftGrip;
+        if (rightGrip == null) rightGrip = PlayerRig.Instance.rightGrip;
+        if (leftInteractor == null) leftInteractor = PlayerRig.Instance.leftInteractor;
+        if (rightInteractor == null) rightInteractor = PlayerRig.Instance.rightInteractor;
+    }
+
+
     private void Update()
     {
         TryGiveArrow(rightHand, rightGrip, rightInteractor);

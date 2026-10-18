@@ -52,6 +52,14 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         attachLocalRotation = Quaternion.Inverse(transform.rotation) * attach.rotation;
     }
 
+    private void Start()
+    {
+        if (leftHand == null) leftHand = PlayerRig.Instance.leftHand;
+        if (rightHand == null) rightHand = PlayerRig.Instance.rightHand;
+        if (leftGrip == null) leftGrip = PlayerRig.Instance.leftGrip;
+        if (rightGrip == null) rightGrip = PlayerRig.Instance.rightGrip;
+    }
+
     private void OnDestroy()
     {
         if (grab != null) grab.selectFilters.Remove(this);
