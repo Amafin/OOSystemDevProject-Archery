@@ -8,6 +8,11 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI timerText; // texte du timer
     private float timeLeft; // temps restant en secondes
     public bool IsRunning { get; private set; } // indique si le niveau est en cours
+    public GameObject resultPanel;
+    public TextMeshProUGUI bestText;
+    public TextMeshProUGUI resultText;
+    public TextMeshProUGUI scoreText;
+    int bestScore = 0;
 
     private void Awake()
     {
@@ -20,6 +25,7 @@ public class LevelManager : MonoBehaviour
 
     public void StartLevel()
     {
+        if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
         IsRunning = true;
@@ -53,7 +59,20 @@ public class LevelManager : MonoBehaviour
     void EndLevel()
     {
         int tier = ScoreManager.Instance.TierReached;
-        if (timerText != null)
-            timerText.text = tier > 0 ? "Fin ! Palier " + tier : "Fin ! Objectif raté";
+        int score = ScoreManager.Instance.Score;
+
+        if (score > bestScore)
+        {
+            bestScore = score;
+        }
+
+        if (resultText != null)
+            resultText.text = tier > 0 ? "Objectif réussi ! Palier " + tier : "Objectif raté";
+        if (scoreText != null)
+            scoreText.text = "Score : " + score;
+        if (bestText != null)
+            bestText.text = "Meilleur : " + bestScore;
+
+        if (resultPanel != null) resultPanel.SetActive(true);   // on montre les résultats
     }
 }
