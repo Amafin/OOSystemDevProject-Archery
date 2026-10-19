@@ -34,12 +34,14 @@ public class LevelManager : MonoBehaviour
             duration = difficulty.levelDuration;
             ScoreManager.Instance.SetTiers(difficulty.tiers);
             if (TargetSpawner.Instance != null) TargetSpawner.Instance.ApplyDifficulty(difficulty);
+            if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.ApplyDifficulty(difficulty);
         }
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
         IsRunning = true;
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
+        if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StartSpawning();
     }
 
     private void Update()
@@ -87,5 +89,6 @@ public class LevelManager : MonoBehaviour
         if (resultPanel != null) resultPanel.SetActive(true);   // on montre les résultats
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
+        if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
     }
 }
