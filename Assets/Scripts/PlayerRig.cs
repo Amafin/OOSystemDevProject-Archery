@@ -18,4 +18,10 @@ public class PlayerRig : MonoBehaviour
     {
         Instance = this;
     }
+
+    public void Vibrate(float amplitude, float duration)
+    {
+        if (leftInteractor is XRBaseInputInteractor left) left.SendHapticImpulse(amplitude, duration);
+        if (rightInteractor is XRBaseInputInteractor right) right.SendHapticImpulse(amplitude, duration);
+    }
 }

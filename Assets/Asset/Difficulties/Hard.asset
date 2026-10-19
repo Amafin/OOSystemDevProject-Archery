@@ -19,5 +19,5 @@ MonoBehaviour:
   flyingCount: 2
   flyingRadius: {x: 12, y: 20}
   flyingHeight: {x: 3, y: 7}
-  flyingSpeed: {x: 0.8, y: 1.5}
+  flyingSpeed: {x: 0.5, y: 1}
   flyingArc: {x: 20, y: 45}

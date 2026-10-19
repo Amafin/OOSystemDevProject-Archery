@@ -44,7 +44,7 @@ public class ScoreManager : MonoBehaviour
         // un niveau existe mais il est terminé : on ne compte plus rien
         if (LevelManager.Instance != null && !LevelManager.Instance.IsRunning) return;
 
-        Score += points;
+        Score = Mathf.Max(0, Score + points);   // jamais en dessous de 0
         UpdateGauge();
     }
 
