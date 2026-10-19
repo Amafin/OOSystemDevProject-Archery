@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-// un gladiateur sort d'une porte, descend les marches, marche vers la plateforme
-// puis attaque le joueur jusqu'à ce qu'il soit tué
 [RequireComponent(typeof(NavMeshAgent))]
 public class Gladiator : MonoBehaviour, IArrowHittable
 {
@@ -13,10 +11,10 @@ public class Gladiator : MonoBehaviour, IArrowHittable
 
     [Header("Déplacement")]
     public float speed = 2f;  // vitesse de marche (m/s)
-    public float reachDistance = 3f; // distance au centre où il s'arrête pour attaquer (m)
+    public float attackRange = 1.5f; // distance au joueur où il s'arrête pour attaquer (m)
 
     [Header("Attaque")]
-    public float attackInterval = 2f; // un coup toutes les 2 secondes
+    public float attackInterval = 2f; // un coup toutes les X secondes
     public int attackDamage = 5;  // points perdus par coup
     public float hitDelay = 0.4f;   // délai entre le début de l'animation et le moment où l'épée touche
 
@@ -30,15 +28,16 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     public event System.Action<Gladiator> OnRemoved;  // le futur spawner sera prévenu
 
     // les 4 états possibles du gladiateur
-    enum State { Entering, Walking, Attacking, Dead }
+    enum State { Entering, Chasing, Attacking, Dead }
     State state;
 
     NavMeshAgent agent;
-    Transform target; //  centre de l'arène
+    Transform arenaCenter; // centre de l'arène, sert de repère pour la hauteur du sol
     Transform[] path; // les points P0, P1... de la porte
     int pathIndex;
     int health;
     float attackTimer;
+    float repathTimer; // temps avant de recalculer le chemin vers le joueur
 
     private void Awake()
     {
@@ -49,14 +48,14 @@ public class Gladiator : MonoBehaviour, IArrowHittable
 
     private void Start()
     {
-        if (target == null && testDestination != null)
+        if (arenaCenter == null && testDestination != null)
             Setup(testGate, testDestination, speed);
     }
 
     // appelée par le spawner juste après l'apparition
-    public void Setup(Transform gate, Transform dest, float walkSpeed)
+    public void Setup(Transform gate, Transform center, float walkSpeed)
     {
-        target = dest;
+        arenaCenter = center;
         speed = walkSpeed;
 
         if (gate != null && gate.childCount > 0)
@@ -67,30 +66,46 @@ public class Gladiator : MonoBehaviour, IArrowHittable
             transform.position = path[0].position;
             pathIndex = 1;
             state = State.Entering;
-            if (pathIndex >= path.Length) StartWalking();
+            if (pathIndex >= path.Length) StartChasing();
         }
         else
         {
-            StartWalking();
+            StartChasing();
         }
     }
 
     private void Update()
     {
-        if (target == null) return;
+        if (arenaCenter == null) return;
 
         switch (state)
         {
             case State.Entering: FollowPath(); break;
-            case State.Walking: CheckArrival(); break;
+            case State.Chasing: ChasePlayer(); break;
             case State.Attacking: Attack(); break;
         }
 
         if (animator != null)
         {
-            float s = state == State.Entering ? speed : (agent.enabled ? agent.velocity.magnitude : 0f);
+            float s = state == State.Entering ? speed : (agent.enabled && state == State.Chasing ? agent.velocity.magnitude : 0f);
             animator.SetFloat("Speed", s);
         }
+    }
+
+    // position du joueur ramenée au niveau du sol (ses pieds, pas sa tête)
+    Vector3 PlayerGround()
+    {
+        Vector3 p = Camera.main != null ? Camera.main.transform.position : arenaCenter.position;
+        p.y = arenaCenter.position.y;
+        return p;
+    }
+
+    // distance au joueur, à l'horizontale
+    float DistanceToPlayer()
+    {
+        Vector3 flat = PlayerGround() - transform.position;
+        flat.y = 0f;
+        return flat.magnitude;
     }
 
     // descente des marches
@@ -103,36 +118,61 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         if (Vector3.Distance(transform.position, next.position) < 0.05f)
         {
             pathIndex++;
-            if (pathIndex >= path.Length) StartWalking();
+            if (pathIndex >= path.Length) StartChasing();
         }
     }
 
-
-    void StartWalking()
+    // arrivé sur le sable : le NavMesh prend le relais
+    void StartChasing()
     {
-        state = State.Walking;
+        state = State.Chasing;
         agent.enabled = true;
         agent.speed = speed;
+        agent.stoppingDistance = attackRange * 0.9f; // s'arrête un peu avant la portée max
         agent.Warp(transform.position); // "pose" le gladiateur sur le NavMesh
-        agent.SetDestination(target.position);
+        agent.isStopped = false;
+        agent.SetDestination(PlayerGround());
+        repathTimer = 0f;
     }
 
-    void CheckArrival()
+    // marche vers le joueur
+    void ChasePlayer()
     {
-        Vector3 flat = target.position - transform.position;
-        flat.y = 0f;
-        if (flat.magnitude <= reachDistance)
+        // le joueur peut bouger : on recalcule le chemin 4 fois par seconde
+        repathTimer -= Time.deltaTime;
+        if (repathTimer <= 0f)
         {
-            state = State.Attacking;
-            agent.isStopped = true;
-            attackTimer = attackInterval * 0.5f; // premier coup un peu plus vite
+            repathTimer = 0.25f;
+            agent.SetDestination(PlayerGround());
         }
+
+        bool inRange = DistanceToPlayer() <= attackRange;
+
+        // joueur hors d'atteinte (plateforme inaccessible) : il frappe depuis le point le plus proche
+        bool stuck = !agent.pathPending && agent.hasPath && agent.remainingDistance <= agent.stoppingDistance + 0.05f;
+
+        if (inRange || stuck) StartAttack();
+    }
+
+    void StartAttack()
+    {
+        state = State.Attacking;
+        agent.isStopped = true;
+        attackTimer = attackInterval * 0.5f; // premier coup un peu plus vite
     }
 
     void Attack()
     {
         // toujours tourné vers le joueur
-        if (Camera.main != null) FaceTowards(Camera.main.transform.position);
+        FaceTowards(PlayerGround());
+
+        // le joueur s'est éloigné : il le poursuit à nouveau
+        if (DistanceToPlayer() > attackRange + 0.75f)
+        {
+            CancelInvoke(nameof(DealDamage));
+            StartChasing();
+            return;
+        }
 
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0f)
@@ -145,13 +185,13 @@ public class Gladiator : MonoBehaviour, IArrowHittable
 
     void DealDamage()
     {
-        if (state != State.Attacking) return; // tué entre-temps : le coup n'arrive pas
+        if (state != State.Attacking) return; // tué ou joueur parti entre-temps : le coup n'arrive pas
 
         if (ScoreManager.Instance != null) ScoreManager.Instance.AddPoints(-attackDamage);
         if (PlayerRig.Instance != null) PlayerRig.Instance.Vibrate(0.8f, 0.3f);
     }
 
-    //touché par une flèche
+    // touché par une flèche
     public void OnArrowHit(Vector3 hitPoint, Vector3 surfaceNormal)
     {
         if (state == State.Dead) return;
