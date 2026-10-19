@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI scoreText;
     int bestScore = 0;
+    public DifficultySettings difficulty; // les paramètres de difficulté du niveau
 
     private void Awake()
     {
@@ -26,9 +27,18 @@ public class LevelManager : MonoBehaviour
     public void StartLevel()
     {
         if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
+
+        // On applique les paramètres de difficulté
+        if (difficulty != null)
+        {
+            duration = difficulty.levelDuration;
+            ScoreManager.Instance.SetTiers(difficulty.tiers);
+            if (TargetSpawner.Instance != null) TargetSpawner.Instance.ApplyDifficulty(difficulty);
+        }
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
         IsRunning = true;
+
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
     }
 

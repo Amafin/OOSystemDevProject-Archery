@@ -9,6 +9,7 @@ public class ScoreManager : MonoBehaviour
     [Header("Paliers")]
     public int[] tiers = { 30, 60, 100 };  // seuils des paliers, le dernier = jauge pleine
     public Color[] tierColors; // une couleur de plus que de paliers
+    public RectTransform[] tierMarkers; // marqueurs de paliers sur la jauge
 
     [Header("Affichage")]
     public Image gaugeFill;  // l'image Fill de la jauge
@@ -57,6 +58,14 @@ public class ScoreManager : MonoBehaviour
     {
         int maxScore = tiers[tiers.Length - 1];   // le dernier palier remplit la jauge
 
+        for (int i = 0; i < tierMarkers.Length; i++)
+        {
+            RectTransform bar = gaugeFill.rectTransform;
+            float height = bar.rect.height;
+            float y = -height / 2f + height * tiers[i] / maxScore;
+            tierMarkers[i].anchoredPosition = new Vector2(tierMarkers[i].anchoredPosition.x, y);
+        }
+
         if (gaugeFill != null)
         {
             // attention float car division entière
@@ -70,5 +79,12 @@ public class ScoreManager : MonoBehaviour
 
         if (scoreText != null)
             scoreText.text = Score + " / " + maxScore;
+    }
+
+    // permet de changer les paliers à la volée (par exemple selon la difficulté)
+    public void SetTiers(int[] newTiers)
+    {
+        tiers = newTiers;
+        UpdateGauge();
     }
 }

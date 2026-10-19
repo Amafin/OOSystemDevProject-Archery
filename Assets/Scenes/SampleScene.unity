@@ -610,6 +610,7 @@ MonoBehaviour:
   bestText: {fileID: 116075357}
   resultText: {fileID: 2060306272}
   scoreText: {fileID: 1191610538}
+  difficulty: {fileID: 11400000, guid: db3b8f7f38c92a542b15d469936490d9, type: 2}
 --- !u!4 &415413394
 Transform:
   m_ObjectHideFlags: 0
@@ -1455,6 +1456,9 @@ MonoBehaviour:
   - {r: 0.90943396, g: 0.06005683, b: 0.8453344, a: 1}
   - {r: 0.734512, g: 0, b: 1, a: 1}
   - {r: 0, g: 0.17252314, b: 1, a: 1}
+  tierMarkers:
+  - {fileID: 1556636134}
+  - {fileID: 167122470}
   gaugeFill: {fileID: 1271566504}
   scoreText: {fileID: 0}
 --- !u!4 &952096571

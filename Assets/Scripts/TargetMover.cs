@@ -17,16 +17,21 @@ public class TargetMover : MonoBehaviour
     float radius, height, speed, arc, baseAngle, phase;
     Quaternion faceOffset; // pour que la face de la cible soit toujours vers le joueur
 
-    public void Setup(Transform arenaCenter, float angle)
+    public void Setup(Transform arenaCenter, float angle, DifficultySettings d = null)
     {
         center = arenaCenter;
         baseAngle = angle;
 
-        // tirage au sort des réglages de la cible
-        radius = Random.Range(radiusRange.x, radiusRange.y);
-        height = Random.Range(heightRange.x, heightRange.y);
-        speed = Random.Range(speedRange.x, speedRange.y);
-        arc = Random.Range(arcRange.x, arcRange.y);
+        //réglages de la cible
+        Vector2 rR = d != null ? d.flyingRadius : radiusRange;
+        Vector2 hR = d != null ? d.flyingHeight : heightRange;
+        Vector2 sR = d != null ? d.flyingSpeed : speedRange;
+        Vector2 aR = d != null ? d.flyingArc : arcRange;
+
+        radius = Random.Range(rR.x, rR.y);
+        height = Random.Range(hR.x, hR.y);
+        speed = Random.Range(sR.x, sR.y);
+        arc = Random.Range(aR.x, aR.y);
         phase = Random.Range(0f, 10f);
 
         // on mémorise la rotation de la face (Center) par rapport à la racine

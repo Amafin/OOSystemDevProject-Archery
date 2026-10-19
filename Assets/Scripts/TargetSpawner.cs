@@ -20,6 +20,7 @@ public class TargetSpawner : MonoBehaviour
 
     [Header("Réglages")]
     public float respawnDelay = 1f;
+    private DifficultySettings settings;    // paramètres de difficulté appliqués
 
     // chaque cible présente et le point qu'elle occupe (null pour les volantes)
     readonly Dictionary<GameObject, Transform> active = new Dictionary<GameObject, Transform>();
@@ -59,7 +60,7 @@ public class TargetSpawner : MonoBehaviour
 
         GameObject obj = Instantiate(flyingTargetPrefab);
         TargetMover mover = obj.GetComponent<TargetMover>();
-        if (mover != null) mover.Setup(arenaCenter, Random.Range(0f, 360f)); // n'importe où autour
+        if (mover != null) mover.Setup(arenaCenter, Random.Range(0f, 360f), settings); // n'importe où autour
 
         Register(obj, null, SpawnFlying);
     }
@@ -97,5 +98,12 @@ public class TargetSpawner : MonoBehaviour
         if (level != null && !level.IsRunning) yield break;
 
         respawn(); // même type de cible, nouvelle position
+    }
+
+    public void ApplyDifficulty(DifficultySettings d)
+    {
+        settings = d;
+        groundCount = d.groundCount;
+        flyingCount = d.flyingCount;
     }
 }
