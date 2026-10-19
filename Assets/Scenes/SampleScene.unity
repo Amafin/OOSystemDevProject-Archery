@@ -159,7 +159,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 79428378}
-  - component: {fileID: 79428379}
   m_Layer: 0
   m_Name: Gate3
   m_TagString: Untagged
@@ -188,29 +187,6 @@ Transform:
   - {fileID: 1470891941}
   m_Father: {fileID: 2015703721}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &79428379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79428377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cbfa9ff1105b3345a4888be6f975bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GladiatorSpawner
-  gladiatorPrefab: {fileID: 0}
-  gates:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  arenaCenter: {fileID: 1318243104}
-  maxAlive: 2
-  spawnInterval: 10
-  gladiatorSpeed: 2
-  firstDelay: 5
 --- !u!1 &79461487
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +223,8 @@ RectTransform:
   - {fileID: 1556636134}
   - {fileID: 167122470}
   - {fileID: 462369144}
+  - {fileID: 2029292652}
+  - {fileID: 2008706142}
   m_Father: {fileID: 1096291044}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2476,7 +2454,7 @@ Transform:
   m_GameObject: {fileID: 1346844796}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.26025176, z: 0, w: 0.9655408}
-  m_LocalPosition: {x: -6.48, y: -0.25, z: -10.07}
+  m_LocalPosition: {x: -6.32, y: -0.25, z: -9.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4159,6 +4137,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2081024979}
+    - targetCorrespondingSourceObject: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2081024980}
   m_SourcePrefab: {fileID: 100100000, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
 --- !u!1 &1375742098
 GameObject:
@@ -4771,7 +4752,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1771755656}
-  - component: {fileID: 1771755657}
   m_Layer: 0
   m_Name: Gate4
   m_TagString: Untagged
@@ -4800,29 +4780,6 @@ Transform:
   - {fileID: 191928725}
   m_Father: {fileID: 2015703721}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &1771755657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771755655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cbfa9ff1105b3345a4888be6f975bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GladiatorSpawner
-  gladiatorPrefab: {fileID: 0}
-  gates:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  arenaCenter: {fileID: 1318243104}
-  maxAlive: 2
-  spawnInterval: 10
-  gladiatorSpeed: 2
-  firstDelay: 5
 --- !u!1 &1800015785
 GameObject:
   m_ObjectHideFlags: 0
@@ -4832,7 +4789,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1800015786}
-  - component: {fileID: 1800015787}
   m_Layer: 0
   m_Name: Gate1
   m_TagString: Untagged
@@ -4861,29 +4817,6 @@ Transform:
   - {fileID: 1513904366}
   m_Father: {fileID: 2015703721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1800015787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1800015785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cbfa9ff1105b3345a4888be6f975bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GladiatorSpawner
-  gladiatorPrefab: {fileID: 5434887015030757898, guid: 0d49e3d9d5be22f4bbb3b8b02beaa3a3, type: 3}
-  gates:
-  - {fileID: 1800015786}
-  - {fileID: 1884401111}
-  - {fileID: 79428378}
-  - {fileID: 1771755656}
-  arenaCenter: {fileID: 1318243104}
-  maxAlive: 2
-  spawnInterval: 10
-  gladiatorSpeed: 2
-  firstDelay: 5
 --- !u!1 &1815318735
 GameObject:
   m_ObjectHideFlags: 0
@@ -5161,7 +5094,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1884401111}
-  - component: {fileID: 1884401112}
   m_Layer: 0
   m_Name: Gate2
   m_TagString: Untagged
@@ -5190,29 +5122,6 @@ Transform:
   - {fileID: 1045950326}
   m_Father: {fileID: 2015703721}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &1884401112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1884401110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cbfa9ff1105b3345a4888be6f975bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GladiatorSpawner
-  gladiatorPrefab: {fileID: 0}
-  gates:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  arenaCenter: {fileID: 1318243104}
-  maxAlive: 2
-  spawnInterval: 10
-  gladiatorSpeed: 2
-  firstDelay: 5
 --- !u!1 &1918932386
 GameObject:
   m_ObjectHideFlags: 0
@@ -5581,6 +5490,81 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2008706139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2008706142}
+  - component: {fileID: 2008706141}
+  - component: {fileID: 2008706140}
+  m_Layer: 5
+  m_Name: HealthFill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2008706140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008706139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8862745, g: 0, b: 0.07450981, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 1
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2008706141
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008706139}
+  m_CullTransparentMesh: 1
+--- !u!224 &2008706142
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008706139}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 79461488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -275}
+  m_SizeDelta: {x: 100, y: 18}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2015703720
 GameObject:
   m_ObjectHideFlags: 0
@@ -5590,6 +5574,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2015703721}
+  - component: {fileID: 2015703722}
   m_Layer: 0
   m_Name: GladiatorSpawner
   m_TagString: Untagged
@@ -5616,6 +5601,104 @@ Transform:
   - {fileID: 1771755656}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2015703722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015703720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cbfa9ff1105b3345a4888be6f975bb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GladiatorSpawner
+  gladiatorPrefab: {fileID: 5434887015030757898, guid: 0d49e3d9d5be22f4bbb3b8b02beaa3a3, type: 3}
+  gates:
+  - {fileID: 1800015786}
+  - {fileID: 1884401111}
+  - {fileID: 79428378}
+  - {fileID: 1771755656}
+  arenaCenter: {fileID: 1318243104}
+  maxAlive: 2
+  spawnInterval: 10
+  gladiatorSpeed: 2
+  firstDelay: 5
+--- !u!1 &2029292651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2029292652}
+  - component: {fileID: 2029292654}
+  - component: {fileID: 2029292653}
+  m_Layer: 5
+  m_Name: HealthBackground
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2029292652
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029292651}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 79461488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -275}
+  m_SizeDelta: {x: 100, y: 18}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2029292653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029292651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.4037736, g: 0.38929868, b: 0.38929868, a: 0.7058824}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2029292654
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029292651}
+  m_CullTransparentMesh: 1
 --- !u!1 &2048242645
 GameObject:
   m_ObjectHideFlags: 0
@@ -5807,6 +5890,22 @@ MonoBehaviour:
   leftGrip: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightInteractor: {fileID: 542522938}
   leftInteractor: {fileID: 2136645323}
+--- !u!114 &2081024980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081024972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3ca14ae1efdd244195f01bcc6d028f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
+  endLevelOnDeath: 1
+  healthFill: {fileID: 2008706140}
+  healthText: {fileID: 0}
 --- !u!1 &2108421552
 GameObject:
   m_ObjectHideFlags: 0

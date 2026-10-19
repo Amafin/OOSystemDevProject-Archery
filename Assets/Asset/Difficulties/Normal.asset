@@ -17,11 +17,11 @@ MonoBehaviour:
   tiers: 1e0000004600000096000000
   groundCount: 2
   flyingCount: 1
-  flyingRadius: {x: 8, y: 15}
-  flyingHeight: {x: 2, y: 5}
+  flyingRadius: {x: 5, y: 8}
+  flyingHeight: {x: 2.5, y: 4.5}
   flyingSpeed: {x: 0.3, y: 1}
   flyingArc: {x: 10, y: 30}
   maxGladiators: 2
-  gladiatorInterval: 10
+  gladiatorInterval: 11
   gladiatorSpeed: 1.5
   gladiatorFirstDelay: 5

@@ -17,8 +17,8 @@ MonoBehaviour:
   tiers: 140000003200000064000000
   groundCount: 3
   flyingCount: 0
-  flyingRadius: {x: 6, y: 10}
-  flyingHeight: {x: 2, y: 3}
+  flyingRadius: {x: 4, y: 6}
+  flyingHeight: {x: 2, y: 3.5}
   flyingSpeed: {x: 0.2, y: 0.5}
   flyingArc: {x: 10, y: 20}
   maxGladiators: 1

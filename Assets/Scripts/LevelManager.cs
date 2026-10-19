@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour
         }
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
+        if (PlayerHealth.Instance != null) PlayerHealth.Instance.ResetHealth();
         IsRunning = true;
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
@@ -69,7 +70,7 @@ public class LevelManager : MonoBehaviour
         timerText.text = minutes + ":" + seconds.ToString("00");
     }
 
-    void EndLevel()
+    void EndLevel(bool defeated = false)
     {
         int tier = ScoreManager.Instance.TierReached;
         int score = ScoreManager.Instance.Score;
@@ -80,7 +81,10 @@ public class LevelManager : MonoBehaviour
         }
 
         if (resultText != null)
-            resultText.text = tier > 0 ? "Objectif réussi ! Palier " + tier : "Objectif raté";
+        {
+            if (defeated) resultText.text = "Vaincu !";
+            else resultText.text = tier > 0 ? "Objectif réussi ! Palier " + tier : "Objectif raté";
+        }
         if (scoreText != null)
             scoreText.text = "Score : " + score;
         if (bestText != null)
@@ -90,5 +94,13 @@ public class LevelManager : MonoBehaviour
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
+    }
+
+    // fin du niveau avant le timer (joueur vaincu)
+    public void ForceEnd(bool defeated)
+    {
+        if (!IsRunning) return;
+        IsRunning = false;
+        EndLevel(defeated);
     }
 }

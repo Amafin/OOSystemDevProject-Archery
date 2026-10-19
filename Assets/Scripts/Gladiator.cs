@@ -15,7 +15,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
 
     [Header("Attaque")]
     public float attackInterval = 2f; // un coup toutes les X secondes
-    public int attackDamage = 5;  // points perdus par coup
+    public int attackDamage = 5;  // pv perdus par coup
     public float hitDelay = 0.4f;   // délai entre le début de l'animation et le moment où l'épée touche
 
     [Header("Test sans spawner")]
@@ -187,8 +187,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     {
         if (state != State.Attacking) return; // tué ou joueur parti entre-temps : le coup n'arrive pas
 
-        if (ScoreManager.Instance != null) ScoreManager.Instance.AddPoints(-attackDamage);
-        if (PlayerRig.Instance != null) PlayerRig.Instance.Vibrate(0.8f, 0.3f);
+        if (PlayerHealth.Instance != null) PlayerHealth.Instance.TakeDamage(attackDamage);
     }
 
     // touché par une flèche
