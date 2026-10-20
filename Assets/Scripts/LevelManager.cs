@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     public DifficultySettings difficulty; // les paramètres de difficulté du niveau
 
     public TextMeshProUGUI unlockText; // "Nouvel équipement : ..." dans le panneau de résultats
+    public bool IsTraining => difficulty != null && difficulty.isTraining;  // vrai si la difficulté choisie est le mode entraînement
 
     private void Awake()
     {
@@ -45,11 +46,12 @@ public class LevelManager : MonoBehaviour
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StartSpawning();
-    }
+        if (IsTraining && timerText != null) timerText.text = "Entraînement"; // pas de timer en mode entraînement
+        }
 
     private void Update()
     {
-        if (IsRunning)
+        if (IsRunning && !IsTraining)
         {
             timeLeft -= Time.deltaTime;
             if (timeLeft <= 0f)
@@ -94,7 +96,7 @@ public class LevelManager : MonoBehaviour
 
         // objectif atteint sans être vaincu : on débloque l'équipement suivant
         string unlocked = null;
-        if (!defeated && tier > 0 && EquipmentManager.Instance != null)
+        if (!defeated && tier > 0 && !IsTraining && EquipmentManager.Instance != null)
             unlocked = EquipmentManager.Instance.UnlockNext();
 
         if (unlockText != null)

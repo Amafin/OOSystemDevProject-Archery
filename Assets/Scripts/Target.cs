@@ -10,7 +10,13 @@ public class Target : MonoBehaviour, IArrowHittable
 
     public event System.Action OnHit; // le spawner sera prévenu quand la cible est touchée
     bool wasHit; // une cible ne compte qu'une fois
+    float baseScale;   // taille de la cible à sa création, pour adapter le rayon si elle est agrandie
 
+
+    private void Awake()
+    {
+        baseScale = transform.lossyScale.x;   // taille d'origine, avant que le spawner la change
+    }
 
     // appelée par la flèche quand elle touche la cible
     public void OnArrowHit(Vector3 hitPoint, Vector3 surfaceNormal)
@@ -35,7 +41,10 @@ public class Target : MonoBehaviour, IArrowHittable
 
         // décalage par rapport au centre, mis à plat sur la face
         Vector3 offset = Vector3.ProjectOnPlane(hitPoint - center.position, faceNormal);
-        float ring = offset.magnitude * 10f / radius;   // 0 au centre, 10 au bord
+
+
+        float scaledRadius = radius * transform.lossyScale.x / baseScale;   // le rayon suit la taille de la cible
+        float ring = offset.magnitude * 10f / scaledRadius; // 0 au centre, 10 au bord
         if (ring >= 10f) return 0;  // hors de la cible
 
         int points = 10 - Mathf.FloorToInt(ring);

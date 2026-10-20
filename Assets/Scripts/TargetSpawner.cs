@@ -51,6 +51,7 @@ public class TargetSpawner : MonoBehaviour
         if (standTargetPrefab == null || point == null) return;
 
         GameObject obj = Instantiate(standTargetPrefab, point.position, point.rotation);
+        if (settings != null) obj.transform.localScale *= settings.targetScale;   // taille selon la difficulté
         Register(obj, point, SpawnGround);
     }
 
@@ -59,6 +60,8 @@ public class TargetSpawner : MonoBehaviour
         if (flyingTargetPrefab == null || arenaCenter == null) return;
 
         GameObject obj = Instantiate(flyingTargetPrefab);
+        if (settings != null) obj.transform.localScale *= settings.targetScale;   // taille selon la difficulté
+
         TargetMover mover = obj.GetComponent<TargetMover>();
         if (mover != null) mover.Setup(arenaCenter, Random.Range(0f, 360f), settings); // n'importe où autour
 
