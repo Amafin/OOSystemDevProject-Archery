@@ -42,7 +42,12 @@ public class ArrowQuiver : MonoBehaviour
         bool handEmpty = !interactor.hasSelection;
         if (handInQuiver && justPressed && handEmpty)
         {
-            Arrow arrow = Instantiate(arrowPrefab, hand.position, hand.rotation);
+            // la flèche choisie dans l'équipement, sinon celle par défaut du carquois
+            Arrow prefab = arrowPrefab;
+            if (EquipmentManager.Instance != null && EquipmentManager.Instance.SelectedArrow != null)
+                prefab = EquipmentManager.Instance.SelectedArrow.prefab;
+
+            Arrow arrow = Instantiate(prefab, hand.position, hand.rotation); 
             interactor.interactionManager.SelectEnter((IXRSelectInteractor)interactor, (IXRSelectInteractable)arrow.Grab);
         }
     }

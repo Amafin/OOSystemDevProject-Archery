@@ -4,6 +4,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
 public class Arrow : MonoBehaviour
 {
+    public ArrowType type;   // le type de cette flèche
     public float lifeTime = 20f;
     public float touchLifeTime = 2f;
     public Collider grabZone;   // la zone de saisie, éteinte en vol
@@ -35,7 +36,8 @@ public class Arrow : MonoBehaviour
         IsNocked = false;
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.linearVelocity = velocity;
+        float speedMult = type != null ? type.speedMultiplier : 1f;
+        rb.linearVelocity = velocity * speedMult; // une flèche rapide part plus vite avec le même arc
         flying = true;
         Destroy(gameObject, lifeTime);
     }
@@ -44,6 +46,10 @@ public class Arrow : MonoBehaviour
     {
         if (!flying) return;
         lastVelocity = rb.linearVelocity;   // mémorisation de la vitesse avant un éventuel choc
+                                             
+        if (type != null && type.gravityFactor != 1f)// gravité ajustée : gravityFactor 0.5 = on retire la moitié de la gravité normale
+            rb.AddForce(Physics.gravity * (type.gravityFactor - 1f), ForceMode.Acceleration);
+
         if (rb.linearVelocity.sqrMagnitude > 1f)
             rb.MoveRotation(Quaternion.LookRotation(rb.linearVelocity));
     }
