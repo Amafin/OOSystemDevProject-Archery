@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BowData_2
   m_EditorClassIdentifier: Assembly-CSharp::BowData
   displayName: "Arc d'entra\xEEnement"
-  description: 
+  description: "L\u2019arme des archers de la l\xE9gion. Demande plus de force mais
+    ses fl\xE8ches filent loin et vite."
   prefab: {fileID: 6650279594915894501, guid: 1fbdfb82a1e7cd040a0f6c2e0d229da4, type: 3}
   unlockOrder: 2

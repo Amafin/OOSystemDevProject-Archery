@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BowData_3
   m_EditorClassIdentifier: Assembly-CSharp::BowData
   displayName: "Arc d'entra\xEEnement"
-  description: 
+  description: "R\xE9serv\xE9 aux vainqueurs de l\u2019ar\xE8ne. Le plus puissant
+    de tous, pour qui sait le tendre jusqu\u2019au bout."
   prefab: {fileID: 6650279594915894501, guid: 4f6c6aabe6fca504cb358a05eb32d824, type: 3}
   unlockOrder: 3

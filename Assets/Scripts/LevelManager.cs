@@ -15,6 +15,8 @@ public class LevelManager : MonoBehaviour
     int bestScore = 0;
     public DifficultySettings difficulty; // les paramètres de difficulté du niveau
 
+    public TextMeshProUGUI unlockText; // "Nouvel équipement : ..." dans le panneau de résultats
+
     private void Awake()
     {
         Instance = this;
@@ -89,6 +91,14 @@ public class LevelManager : MonoBehaviour
             scoreText.text = "Score : " + score;
         if (bestText != null)
             bestText.text = "Meilleur : " + bestScore;
+
+        // objectif atteint sans être vaincu : on débloque l'équipement suivant
+        string unlocked = null;
+        if (!defeated && tier > 0 && EquipmentManager.Instance != null)
+            unlocked = EquipmentManager.Instance.UnlockNext();
+
+        if (unlockText != null)
+            unlockText.text = unlocked != null ? "Nouvel équipement :\n" + unlocked : "";
 
         if (resultPanel != null) resultPanel.SetActive(true);   // on montre les résultats
 

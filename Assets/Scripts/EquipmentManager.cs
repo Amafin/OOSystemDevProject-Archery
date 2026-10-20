@@ -20,9 +20,9 @@ public class EquipmentManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        // par défaut : le premier arc et la première flèche
-        if (bows.Length > 0) SelectedBow = bows[0];
-        if (arrows.Length > 0) SelectedArrow = arrows[0];
+        // par défaut : le meilleur arc et la meilleure flèche déjà débloqués
+        foreach (BowData b in bows) if (IsUnlocked(b)) SelectedBow = b;
+        foreach (ArrowType a in arrows) if (IsUnlocked(a)) SelectedArrow = a;
     }
 
     private void Start()
@@ -33,12 +33,14 @@ public class EquipmentManager : MonoBehaviour
     // appelée plus tard par le menu
     public void SelectBow(BowData bow)
     {
+        if (!IsUnlocked(bow)) return;
         SelectedBow = bow;
         SpawnBow();
     }
 
     public void SelectArrow(ArrowType arrow)
     {
+        if (!IsUnlocked(arrow)) return;
         SelectedArrow = arrow;
     }
 
@@ -49,5 +51,47 @@ public class EquipmentManager : MonoBehaviour
         if (SelectedBow == null || SelectedBow.prefab == null || bowSpawnPoint == null) return;
 
         currentBow = Instantiate(SelectedBow.prefab, bowSpawnPoint.position, bowSpawnPoint.rotation);
+    }
+
+    // progression
+    public int UnlockedLevel => SaveSystem.Data.unlockedLevel;
+
+    public bool IsUnlocked(BowData bow) => bow.unlockOrder <= UnlockedLevel;
+    public bool IsUnlocked(ArrowType arrow) => arrow.unlockOrder <= UnlockedLevel;
+
+    // le plus haut niveau existant (3 avec 4 arcs)
+    int MaxLevel()
+    {
+        int max = 0;
+        foreach (BowData b in bows) max = Mathf.Max(max, b.unlockOrder);
+        foreach (ArrowType a in arrows) max = Mathf.Max(max, a.unlockOrder);
+        return max;
+    }
+
+    // appelée en fin de partie réussie : débloque le niveau suivant
+    // renvoie le texte à afficher ou null s'il n'y a plus rien à débloquer
+    public string UnlockNext()
+    {
+        if (UnlockedLevel >= MaxLevel()) return null;
+
+        SaveSystem.Data.unlockedLevel++;
+        SaveSystem.Save();
+
+        // on équipe directement les nouveautés et on prépare le message
+        string message = "";
+        foreach (BowData b in bows)
+            if (b.unlockOrder == UnlockedLevel) { SelectBow(b); message += b.displayName + "\n"; }
+        foreach (ArrowType a in arrows)
+            if (a.unlockOrder == UnlockedLevel) { SelectArrow(a); message += a.displayName + "\n"; }
+
+        return message;
+    }
+
+    // clic droit sur le composant dans l'Inspector > "Reset progression"
+    [ContextMenu("Reset progression")]
+    void ResetProgression()
+    {
+        SaveSystem.ResetAll();
+        Debug.Log("Progression remise à zéro");
     }
 }

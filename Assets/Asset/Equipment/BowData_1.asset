@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BowData_1
   m_EditorClassIdentifier: Assembly-CSharp::BowData
   displayName: "Arc d'entra\xEEnement"
-  description: 
+  description: "Arc solide utilis\xE9 par les chasseurs des provinces. Plus de puissance
+    pour atteindre les cibles \xE9loign\xE9es."
   prefab: {fileID: 6650279594915894501, guid: 49e488f0434c2bb4baa35470349566ad, type: 3}
   unlockOrder: 1
