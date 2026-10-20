@@ -24,9 +24,18 @@ public class LevelManager : MonoBehaviour
     }
     private void Start()
     {
-        StartLevel();
+        // s'il y a un menu, c'est lui qui lance la partie
+        if (MenuManager.Instance == null) StartLevel();
     }
 
+    // appelée par le menu
+    public void StartLevel(DifficultySettings chosen)
+    {
+        difficulty = chosen;
+        StartLevel();
+    }
+    
+    
     public void StartLevel()
     {
         if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
@@ -72,6 +81,16 @@ public class LevelManager : MonoBehaviour
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         timerText.text = minutes + ":" + seconds.ToString("00");
+    }
+
+    // arrête tout et revient au menu
+    public void ReturnToMenu()
+    {
+        IsRunning = false;
+        if (resultPanel != null) resultPanel.SetActive(false);
+        if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
+        if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
+        if (MenuManager.Instance != null) MenuManager.Instance.ShowMenu();
     }
 
     void EndLevel(bool defeated = false)
