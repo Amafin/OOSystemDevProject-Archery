@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: ArrowType_1
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
   displayName: Hunter's Arrow
-  description: "Une fl\xE8che plus rapide. Sa trajectoire est un peu plus tendue."
-  prefab: {fileID: 4390092440139158631, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
+  prefab: {fileID: 9044489690294092572, guid: 60a51b6054a3d5f46bfd7b809e83d278, type: 3}
   speedMultiplier: 1.15
   gravityFactor: 0.9
   unlockOrder: 1

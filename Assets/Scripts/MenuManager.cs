@@ -2,36 +2,38 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// le pupitre du menu : difficulté, arc, flèche, volume, jouer
 public class MenuManager : MonoBehaviour
 {
-    public static MenuManager Instance;
+    public static MenuManager Instance; // accessible partout : MenuManager.Instance
 
-    [Header("Panneaux")]
-    public GameObject menuPanel; // le menu principal
-    public GameObject trainingPanel; // le bouton "Quitter" visible pendant l'entraînement
-    public GameObject lectern;   // le pupitre 3D
+    [Header("Panels")]
+    public GameObject menuPanel;        // le menu sur le pupitre
+    public GameObject trainingPanel;    // bouton Quit pendant l'entraînement
+    public GameObject lectern;  // le pupitre 3D (caché pendant une partie)
 
-    [Header("Difficultés (dans l'ordre affiché)")]
-    public DifficultySettings[] difficulties;// Entraînement, Facile, Normal, Difficile
-    public int defaultDifficulty = 2;   // niveau choisi au départ (2 = Normal)
-
-    [Header("Textes")]
+    [Header("Difficulty")]
+    public DifficultySettings[] difficulties;  // Training, Easy, Normal, Hard
+    public int defaultDifficulty = 2;  // Normal par défaut
     public TextMeshProUGUI difficultyText;
-    public TextMeshProUGUI bowText;
-    public TextMeshProUGUI bowDescription;
-    public TextMeshProUGUI arrowText;
-    public TextMeshProUGUI arrowDescription;
 
-    [Header("Volume")]
+    [Header("Levels")]
+    public LevelData[] levels;  // Level_1 à Level_4, dans l'ordre
+    public LevelData trainingLevel; // contenu de l'entraînement (cibles fixes)
+    public GameObject levelRow; // caché en entraînement
+    public TextMeshProUGUI levelText;
+
+    [Header("Equipment")]
+    public TextMeshProUGUI bowText;
+    public TextMeshProUGUI arrowText;
+
+    [Header("Other")]
     public Slider volumeSlider;
+    public Button playButton;
 
     int difficultyIndex;
+    int levelIndex;
     int bowIndex;
     int arrowIndex;
-
-    [Header("Bouton")]
-    public Button playButton;   // grisé si l'équipement affiché est verrouillé
 
     private void Awake()
     {
@@ -40,57 +42,88 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        // volume enregistré
-        AudioListener.volume = SaveSystem.Data.volume;
-        if (volumeSlider != null) volumeSlider.value = SaveSystem.Data.volume;
+        // volume sauvegardé
+        float volume = SaveSystem.Data.volume;
+        AudioListener.volume = volume;
+        if (volumeSlider != null) volumeSlider.SetValueWithoutNotify(volume);
 
         difficultyIndex = defaultDifficulty;
 
-        // on part de l'équipement actuellement sélectionné
+        // on part de l'équipement déjà sélectionné par EquipmentManager
         EquipmentManager eq = EquipmentManager.Instance;
-        if (eq != null)
-        {
-            bowIndex = System.Array.IndexOf(eq.bows, eq.SelectedBow);
-            arrowIndex = System.Array.IndexOf(eq.arrows, eq.SelectedArrow);
-        }
+        bowIndex = System.Array.IndexOf(eq.bows, eq.SelectedBow);
+        arrowIndex = System.Array.IndexOf(eq.arrows, eq.SelectedArrow);
+        if (bowIndex < 0) bowIndex = 0;
+        if (arrowIndex < 0) arrowIndex = 0;
+
+        // on se place sur le niveau débloqué le plus avancé
+        levelIndex = 0;
+        for (int i = 0; i < levels.Length; i++)
+            if (eq.IsUnlocked(levels[i])) levelIndex = i;
 
         ShowMenu();
     }
 
+    // affiche le menu (au démarrage et en revenant d'une partie)
     public void ShowMenu()
     {
+        SetLecternVisible(true);
         if (menuPanel != null) menuPanel.SetActive(true);
         if (trainingPanel != null) trainingPanel.SetActive(false);
         Refresh();
     }
 
-    public void Play()
+    public void SetLecternVisible(bool visible)
     {
-        // sécurité : refuse de lancer avec un équipement verrouillé
-        EquipmentManager eq = EquipmentManager.Instance;
-        if (eq != null && (!eq.IsUnlocked(eq.bows[bowIndex]) || !eq.IsUnlocked(eq.arrows[arrowIndex]))) return;
-
-        if (menuPanel != null) menuPanel.SetActive(false);
-
-        DifficultySettings d = difficulties[difficultyIndex];
-        if (trainingPanel != null) trainingPanel.SetActive(d.isTraining); // bouton Quitter en entraînement
-
-        LevelManager.Instance.StartLevel(d);
+        if (lectern != null) lectern.SetActive(visible);
     }
 
+    // bouton Play
+    public void Play()
+    {
+        EquipmentManager eq = EquipmentManager.Instance;
+        // sécurité : on ne lance pas avec un équipement verrouillé
+        if (!eq.IsUnlocked(eq.SelectedBow) || !eq.IsUnlocked(eq.SelectedArrow)) return;
+
+        DifficultySettings d = difficulties[difficultyIndex];
+        LevelData chosenLevel = d.isTraining ? trainingLevel : levels[levelIndex];
+        if (chosenLevel == null) return;
+
+        SetLecternVisible(d.isTraining);   // en entraînement on garde le pupitre pour le bouton Quit
+        if (menuPanel != null) menuPanel.SetActive(false);
+        if (trainingPanel != null) trainingPanel.SetActive(d.isTraining);
+
+        LevelManager.Instance.StartLevel(d, chosenLevel);   //+ le niveau
+    }
+
+    // bouton Quit de l'entraînement
     public void QuitTraining()
     {
         LevelManager.Instance.ReturnToMenu();
     }
 
-    // boutons ◀ ▶
+    // Difficulté
     public void NextDifficulty() { difficultyIndex = Wrap(difficultyIndex + 1, difficulties.Length); Refresh(); }
     public void PrevDifficulty() { difficultyIndex = Wrap(difficultyIndex - 1, difficulties.Length); Refresh(); }
 
-    public void NextBow() { ChangeBow(+1); }
-    public void PrevBow() { ChangeBow(-1); }
-    public void NextArrow() { ChangeArrow(+1); }
-    public void PrevArrow() { ChangeArrow(-1); }
+    // Niveau
+    public void NextLevel() => ChangeLevel(1);
+    public void PrevLevel() => ChangeLevel(-1);
+
+    void ChangeLevel(int step)
+    {
+        EquipmentManager eq = EquipmentManager.Instance;
+        // on avance jusqu'au prochain niveau débloqué (au pire on revient au même)
+        for (int i = 0; i < levels.Length; i++)
+        {
+            levelIndex = Wrap(levelIndex + step, levels.Length);
+            if (eq.IsUnlocked(levels[levelIndex])) break;
+        }
+        Refresh();
+    }
+    // Arc
+    public void NextBow() => ChangeBow(1);
+    public void PrevBow() => ChangeBow(-1);
 
     void ChangeBow(int step)
     {
@@ -105,6 +138,10 @@ public class MenuManager : MonoBehaviour
         Refresh();
     }
 
+    // Flèche
+    public void NextArrow() => ChangeArrow(1);
+    public void PrevArrow() => ChangeArrow(-1);
+
     void ChangeArrow(int step)
     {
         EquipmentManager eq = EquipmentManager.Instance;
@@ -117,45 +154,73 @@ public class MenuManager : MonoBehaviour
         Refresh();
     }
 
-    // volume
+    // Volume
     public void OnVolumeChanged(float value)
     {
-        AudioListener.volume = value; // volume général de tout le jeu
+        AudioListener.volume = value;
         SaveSystem.Data.volume = value;
         SaveSystem.Save();
     }
 
-    // mise à jour des textes
-    void Refresh()
+    // bouton Reset progress : efface la sauvegarde et remet le menu à zéro (tests / démo)
+    public void ResetProgress()
     {
-        if (difficultyText != null)
-            difficultyText.text = difficulties[difficultyIndex].displayName;
+        SaveSystem.ResetAll();
 
+        // équipement de départ
         EquipmentManager eq = EquipmentManager.Instance;
-        if (eq == null) return;
+        eq.SelectBestUnlocked();
+        eq.SpawnBow();
+        bowIndex = System.Array.IndexOf(eq.bows, eq.SelectedBow);
+        arrowIndex = System.Array.IndexOf(eq.arrows, eq.SelectedArrow);
+        levelIndex = 0;
 
-        BowData bow = eq.bows[bowIndex];
-        bool bowOk = eq.IsUnlocked(bow);
-        if (bowText != null) bowText.text = bowOk ? bow.displayName : bow.displayName + " (verrouillé)";
-        if (bowDescription != null) bowDescription.text = bowOk ? bow.description : "Réussissez des parties pour le débloquer.";
+        // volume par défaut
+        AudioListener.volume = SaveSystem.Data.volume;
+        if (volumeSlider != null) volumeSlider.SetValueWithoutNotify(SaveSystem.Data.volume);
 
-        ArrowType arrow = eq.arrows[arrowIndex];
-        bool arrowOk = eq.IsUnlocked(arrow);
-        if (arrowText != null) arrowText.text = arrowOk ? arrow.displayName : arrow.displayName + " (verrouillé)";
-        if (arrowDescription != null) arrowDescription.text = arrowOk ? arrow.description : "Réussissez des parties pour la débloquer.";
+        // classement vidé
+        if (Leaderboard.Instance != null) Leaderboard.Instance.Refresh();
 
-        // on ne peut jouer qu'avec un arc et une flèche débloqués
-        if (playButton != null) playButton.interactable = bowOk && arrowOk;
+        Refresh();
     }
 
-    // fait boucler un index : après le dernier, on revient au premier
+    // met à jour tous les textes du menu
+    void Refresh()
+    {
+        EquipmentManager eq = EquipmentManager.Instance;
+        DifficultySettings d = difficulties[difficultyIndex];
+
+        if (difficultyText != null) difficultyText.text = d.displayName;
+
+        //niveau (caché en entraînement)
+        if (levelRow != null) levelRow.SetActive(!d.isTraining);
+        if (levels.Length > 0)
+        {
+            LevelData l = levels[levelIndex];
+            if (levelText != null) levelText.text = "Level " + (levelIndex + 1) + "/" + levels.Length + " - " + l.displayName;
+        }
+
+        // arc
+        BowData bow = eq.bows[bowIndex];
+        int lockedBows = 0;
+        foreach (BowData b in eq.bows) if (!eq.IsUnlocked(b)) lockedBows++;
+        if (bowText != null) bowText.text = bow.displayName;
+
+        // flèche
+        ArrowType arrow = eq.arrows[arrowIndex];
+        int lockedArrows = 0;
+        foreach (ArrowType a in eq.arrows) if (!eq.IsUnlocked(a)) lockedArrows++;
+        if (arrowText != null) arrowText.text = arrow.displayName;
+
+        // sécurité : Play grisé si l'équipement n'est pas débloqué
+        if (playButton != null)
+            playButton.interactable = eq.IsUnlocked(bow) && eq.IsUnlocked(arrow);
+    }
+
+    // fait boucler un index : après le dernier on revient au premier, et inversement
     int Wrap(int i, int count)
     {
         return (i % count + count) % count;
-    }
-
-    public void SetLecternVisible(bool visible)
-    {
-        if (lectern != null) lectern.SetActive(visible);
     }
 }

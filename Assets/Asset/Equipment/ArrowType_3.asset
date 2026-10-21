@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: ArrowType_3
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
   displayName: Champion's Arro
-  description: "La fl\xE8che la plus rapide et la plus pr\xE9cise de l\u2019ar\xE8ne.
-    Elle file presque en ligne droite."
-  prefab: {fileID: 4390092440139158631, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
+  prefab: {fileID: 9044489690294092572, guid: 0de50179851e61f49b21a5c491c490de, type: 3}
   speedMultiplier: 1.4
   gravityFactor: 0.6
   unlockOrder: 3

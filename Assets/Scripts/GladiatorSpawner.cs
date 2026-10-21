@@ -26,9 +26,9 @@ public class GladiatorSpawner : MonoBehaviour
     }
 
     // reçoit les réglages de la difficulté choisie
-    public void ApplyDifficulty(DifficultySettings d)
+    public void ApplyDifficulty(DifficultySettings d, LevelData l)
     {
-        maxAlive = d.maxGladiators;
+        maxAlive = l.maxGladiators; // le niveau décide s'il y a des gladiateurs
         spawnInterval = d.gladiatorInterval;
         gladiatorSpeed = d.gladiatorSpeed;
         firstDelay = d.gladiatorFirstDelay;

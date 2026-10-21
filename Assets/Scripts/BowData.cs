@@ -5,7 +5,6 @@ using UnityEngine;
 public class BowData : ScriptableObject
 {
     public string displayName = "Arc d'entraînement";
-    [TextArea] public string description;
     public Bow prefab; // le prefab de l'arc (BowLvl0...)
 
     [Header("Progression")]

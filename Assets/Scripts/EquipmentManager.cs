@@ -20,7 +20,12 @@ public class EquipmentManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        // par défaut : le meilleur arc et la meilleure flèche déjà débloqués
+        SelectBestUnlocked();
+    }
+
+    // par défaut : le meilleur arc et la meilleure flèche déjà débloqués
+    public void SelectBestUnlocked()
+    {
         foreach (BowData b in bows) if (IsUnlocked(b)) SelectedBow = b;
         foreach (ArrowType a in arrows) if (IsUnlocked(a)) SelectedArrow = a;
     }
@@ -57,6 +62,7 @@ public class EquipmentManager : MonoBehaviour
 
     public bool IsUnlocked(BowData bow) => bow.unlockOrder <= UnlockedLevel;
     public bool IsUnlocked(ArrowType arrow) => arrow.unlockOrder <= UnlockedLevel;
+    public bool IsUnlocked(LevelData l) => l.unlockOrder <= UnlockedLevel;
 
     // le plus haut niveau existant (3 avec 4 arcs)
     int MaxLevel()

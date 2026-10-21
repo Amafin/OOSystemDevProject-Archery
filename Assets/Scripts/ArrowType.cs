@@ -5,7 +5,6 @@ using UnityEngine;
 public class ArrowType : ScriptableObject
 {
     public string displayName = "Standard"; // nom affiché dans le menu
-    [TextArea] public string description; // texte affiché dans le menu
     public Arrow prefab; // le prefab de cette flèche
 
     [Header("Caractéristiques")]

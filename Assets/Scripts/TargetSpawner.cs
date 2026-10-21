@@ -21,6 +21,7 @@ public class TargetSpawner : MonoBehaviour
     [Header("Réglages")]
     public float respawnDelay = 1f;
     private DifficultySettings settings;    // paramètres de difficulté appliqués
+    LevelData level;   // niveau en cours (nombre de cibles, tailles aléatoires)
 
     // chaque cible présente et le point qu'elle occupe (null pour les volantes)
     readonly Dictionary<GameObject, Transform> active = new Dictionary<GameObject, Transform>();
@@ -103,10 +104,20 @@ public class TargetSpawner : MonoBehaviour
         respawn(); // même type de cible, nouvelle position
     }
 
-    public void ApplyDifficulty(DifficultySettings d)
+    public void ApplyDifficulty(DifficultySettings d, LevelData l)
     {
         settings = d;
-        groundCount = d.groundCount;
-        flyingCount = d.flyingCount;
+        level = l;
+        groundCount = l.groundCount;
+        flyingCount = l.flyingCount;
+    }
+
+    // taille d'une nouvelle cible : base de la difficulté, × un aléatoire si le niveau le demande
+    float TargetScale()
+    {
+        float scale = settings != null ? settings.targetScale : 1f;
+        if (level != null && level.randomSize)
+            scale *= Random.Range(level.sizeRange.x, level.sizeRange.y);
+        return scale;
     }
 }

@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
 
     public TextMeshProUGUI unlockText; // "Nouvel équipement : ..." dans le panneau de résultats
     public bool IsTraining => difficulty != null && difficulty.isTraining;  // vrai si la difficulté choisie est le mode entraînement
+    public LevelData level;   // niveau joué (assigné par le menu, ou à la main pour tester sans menu)
 
     private void Awake()
     {
@@ -29,13 +30,13 @@ public class LevelManager : MonoBehaviour
     }
 
     // appelée par le menu
-    public void StartLevel(DifficultySettings chosen)
+    public void StartLevel(DifficultySettings chosen, LevelData chosenLevel)
     {
         difficulty = chosen;
+        level = chosenLevel;
         StartLevel();
     }
-    
-    
+
     public void StartLevel()
     {
         if (Leaderboard.Instance != null) Leaderboard.Instance.Hide();
@@ -43,13 +44,13 @@ public class LevelManager : MonoBehaviour
         if (NameEntry.Instance != null) NameEntry.Instance.Close();
         if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
 
-        // On applique les paramètres de difficulté
-        if (difficulty != null)
+        // On applique les paramètres de difficulté (tailles, vitesses, durée) et du niveau (nombre de cibles, gladiateurs, tailles aléatoires)
+        if (difficulty != null && level != null)
         {
             duration = difficulty.levelDuration;
             ScoreManager.Instance.SetTiers(difficulty.tiers);
-            if (TargetSpawner.Instance != null) TargetSpawner.Instance.ApplyDifficulty(difficulty);
-            if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.ApplyDifficulty(difficulty);
+            if (TargetSpawner.Instance != null) TargetSpawner.Instance.ApplyDifficulty(difficulty, level);       // NOUVEAU : + level
+            if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.ApplyDifficulty(difficulty, level); // NOUVEAU : + level
         }
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
@@ -59,7 +60,7 @@ public class LevelManager : MonoBehaviour
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StartSpawning();
         if (IsTraining && timerText != null) timerText.text = "Entraînement"; // pas de timer en mode entraînement
-        }
+    }
 
     private void Update()
     {
@@ -101,6 +102,7 @@ public class LevelManager : MonoBehaviour
     void EndLevel(bool defeated = false)
     {
         if (MenuManager.Instance != null) MenuManager.Instance.SetLecternVisible(true);   // pour saisir son nom
+
         int tier = ScoreManager.Instance.TierReached;
         int score = ScoreManager.Instance.Score;
 
@@ -119,9 +121,13 @@ public class LevelManager : MonoBehaviour
         if (bestText != null)
             bestText.text = "Meilleur : " + bestScore;
 
-        // objectif atteint sans être vaincu : on débloque l'équipement suivant
+        //on ne débloque que si on gagne son niveau le plus avancé (sinon rejouer le niveau 1 en boucle débloquerait tout)
+        bool newestLevel = level != null && EquipmentManager.Instance != null
+                           && level.unlockOrder == EquipmentManager.Instance.UnlockedLevel;
+
+        // objectif atteint sans être vaincu, sur son dernier niveau : niveau suivant + équipement suivant
         string unlocked = null;
-        if (!defeated && tier > 0 && !IsTraining && EquipmentManager.Instance != null)
+        if (!defeated && tier > 0 && !IsTraining && newestLevel)
             unlocked = EquipmentManager.Instance.UnlockNext();
 
         if (unlockText != null)

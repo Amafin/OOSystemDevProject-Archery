@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: ArrowType_2
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
   displayName: Legion Arrow
-  description: "\xC9quilibr\xE9e et rapide, elle garde sa ligne plus longtemps. Id\xE9ale
-    contre les gladiateurs en mouvement."
-  prefab: {fileID: 4390092440139158631, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
+  prefab: {fileID: 9044489690294092572, guid: 83a4c861108b5654396e6d2970d22800, type: 3}
   speedMultiplier: 1.3
   gravityFactor: 0.75
   unlockOrder: 2

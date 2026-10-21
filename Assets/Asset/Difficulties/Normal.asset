@@ -15,15 +15,12 @@ MonoBehaviour:
   displayName: Normal
   levelDuration: 60
   tiers: 1e0000004600000096000000
-  groundCount: 2
   targetScale: 1
   isTraining: 0
-  flyingCount: 1
-  flyingRadius: {x: 5, y: 8}
+  flyingRadius: {x: 6, y: 8}
   flyingHeight: {x: 2.5, y: 4.5}
   flyingSpeed: {x: 0.3, y: 1}
   flyingArc: {x: 10, y: 30}
-  maxGladiators: 2
   gladiatorInterval: 15
   gladiatorSpeed: 1.5
   gladiatorFirstDelay: 5
