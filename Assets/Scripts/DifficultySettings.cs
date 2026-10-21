@@ -27,4 +27,5 @@ public class DifficultySettings : ScriptableObject
     public float gladiatorInterval = 10f; // un nouveau toutes les X secondes
     public float gladiatorSpeed = 2f;// vitesse de marche
     public float gladiatorFirstDelay = 5f; // attente avant le premier
+
 }

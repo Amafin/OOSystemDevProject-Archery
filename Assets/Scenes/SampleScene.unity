@@ -8457,6 +8457,7 @@ MonoBehaviour:
   arrowText: {fileID: 783950120}
   arrowDescription: {fileID: 0}
   volumeSlider: {fileID: 962406208}
+  playButton: {fileID: 28054025}
 --- !u!4 &1819243091
 Transform:
   m_ObjectHideFlags: 0

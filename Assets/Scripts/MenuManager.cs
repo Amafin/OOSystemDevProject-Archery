@@ -29,6 +29,9 @@ public class MenuManager : MonoBehaviour
     int bowIndex;
     int arrowIndex;
 
+    [Header("Bouton")]
+    public Button playButton;   // grisé si l'équipement affiché est verrouillé
+
     private void Awake()
     {
         Instance = this;
@@ -62,6 +65,10 @@ public class MenuManager : MonoBehaviour
 
     public void Play()
     {
+        // sécurité : refuse de lancer avec un équipement verrouillé
+        EquipmentManager eq = EquipmentManager.Instance;
+        if (eq != null && (!eq.IsUnlocked(eq.bows[bowIndex]) || !eq.IsUnlocked(eq.arrows[arrowIndex]))) return;
+
         if (menuPanel != null) menuPanel.SetActive(false);
 
         DifficultySettings d = difficulties[difficultyIndex];
@@ -126,6 +133,9 @@ public class MenuManager : MonoBehaviour
         bool arrowOk = eq.IsUnlocked(arrow);
         if (arrowText != null) arrowText.text = arrowOk ? arrow.displayName : arrow.displayName + " (verrouillé)";
         if (arrowDescription != null) arrowDescription.text = arrowOk ? arrow.description : "Réussissez des parties pour la débloquer.";
+
+        // on ne peut jouer qu'avec un arc et une flèche débloqués
+        if (playButton != null) playButton.interactable = bowOk && arrowOk;
     }
 
     // fait boucler un index : après le dernier, on revient au premier

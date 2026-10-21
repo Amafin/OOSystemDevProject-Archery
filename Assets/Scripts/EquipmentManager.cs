@@ -30,17 +30,16 @@ public class EquipmentManager : MonoBehaviour
         SpawnBow();
     }
 
-    // appelée plus tard par le menu
     public void SelectBow(BowData bow)
     {
-        if (!IsUnlocked(bow)) return;
+        if (!IsUnlocked(bow)) return;   // verrouillé : on garde l'arc actuel
         SelectedBow = bow;
         SpawnBow();
     }
 
     public void SelectArrow(ArrowType arrow)
     {
-        if (!IsUnlocked(arrow)) return;
+        if (!IsUnlocked(arrow)) return; // verrouillée : on garde la flèche actuelle
         SelectedArrow = arrow;
     }
 
