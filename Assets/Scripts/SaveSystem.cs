@@ -38,4 +38,13 @@ public static class SaveSystem
         data = new SaveData();
         Save();
     }
+
+    // ajoute un score, trie du meilleur au moins bon et enregistre
+    public static void AddScore(string playerName, int score, string difficulty)
+    {
+        Data.scores.Add(new ScoreEntry { playerName = playerName, score = score, difficulty = difficulty });
+        Data.scores.Sort((a, b) => b.score.CompareTo(a.score));   // tri décroissant : le meilleur en premier
+        if (Data.scores.Count > 50) Data.scores.RemoveRange(50, Data.scores.Count - 50);   // on garde les 50 meilleurs
+        Save();
+    }
 }

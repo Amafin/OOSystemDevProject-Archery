@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour
     
     public void StartLevel()
     {
+        if (NameEntry.Instance != null) NameEntry.Instance.Close();
         if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
 
         // On applique les paramètres de difficulté
@@ -86,6 +87,7 @@ public class LevelManager : MonoBehaviour
     // arrête tout et revient au menu
     public void ReturnToMenu()
     {
+        if (NameEntry.Instance != null) NameEntry.Instance.Close();
         IsRunning = false;
         if (resultPanel != null) resultPanel.SetActive(false);
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
@@ -125,6 +127,10 @@ public class LevelManager : MonoBehaviour
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
+
+        // partie classée (pas l'entraînement) : on propose d'enregistrer le score
+        if (!IsTraining && NameEntry.Instance != null && difficulty != null)
+            NameEntry.Instance.Open(score, difficulty.displayName);
     }
 
     // fin du niveau avant le timer (joueur vaincu)

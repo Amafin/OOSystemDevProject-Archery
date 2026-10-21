@@ -16,4 +16,5 @@ public class SaveData
     public int unlockedLevel = 0;  // niveau de progression (0 = début)
     public List<ScoreEntry> scores = new List<ScoreEntry>(); // le classement
     public float volume = 1f;   // volume général
+    public string lastName = "";   // dernier nom saisi, proposé à la partie suivante
 }
