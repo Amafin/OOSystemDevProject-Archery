@@ -4469,6 +4469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223cfa9f75d6dc249a7c3d27a75f2645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Leaderboard
+  titleText: {fileID: 1721935155}
   listText: {fileID: 1966130998}
   maxLines: 10
   panel: {fileID: 1278141808}

@@ -12,6 +12,7 @@ public class NameEntry : MonoBehaviour
     public Button saveButton; // bouton SAVE
     public TextMeshProUGUI infoText; // "Score: 85 (Normal)" puis "Saved!"
     public int maxLength = 12;    // longueur max du nom
+    string pendingLevel;  // niveau joué (pour le classement)
 
     int pendingScore;
     string pendingDifficulty;
@@ -24,16 +25,17 @@ public class NameEntry : MonoBehaviour
     }
 
     // appelée par LevelManager à la fin d'une partie
-    public void Open(int score, string difficulty)
+    public void Open(int score, string difficulty, string level)
     {
         pendingScore = score;
         pendingDifficulty = difficulty;
+        pendingLevel = level;
         saved = false;
 
         if (panel != null) panel.SetActive(true);
         if (nameInput != null) nameInput.text = SaveSystem.Data.lastName;  // on propose le dernier nom
         if (saveButton != null) saveButton.interactable = true;
-        if (infoText != null) infoText.text = "Score: " + score + " (" + difficulty + ")";
+        if (infoText != null) infoText.text = "Score: " + score + " (" + level + " - " + difficulty + ")";
     }
 
     // appelée par le bouton SAVE
@@ -46,7 +48,7 @@ public class NameEntry : MonoBehaviour
         if (playerName.Length > maxLength) playerName = playerName.Substring(0, maxLength);
 
         SaveSystem.Data.lastName = playerName;
-        SaveSystem.AddScore(playerName, pendingScore, pendingDifficulty);
+        SaveSystem.AddScore(playerName, pendingScore, pendingDifficulty, pendingLevel);
 
         saved = true;
         if (saveButton != null) saveButton.interactable = false;

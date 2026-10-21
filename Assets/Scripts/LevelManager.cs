@@ -12,7 +12,6 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI bestText;
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI scoreText;
-    int bestScore = 0;
     public DifficultySettings difficulty; // les paramètres de difficulté du niveau
 
     public TextMeshProUGUI unlockText; // "Nouvel équipement : ..." dans le panneau de résultats
@@ -106,10 +105,9 @@ public class LevelManager : MonoBehaviour
         int tier = ScoreManager.Instance.TierReached;
         int score = ScoreManager.Instance.Score;
 
-        if (score > bestScore)
-        {
-            bestScore = score;
-        }
+        string levelName = level != null ? level.displayName : "";
+        string difficultyName = difficulty != null ? difficulty.displayName : "";
+        int best = Mathf.Max(SaveSystem.BestScore(levelName, difficultyName), score);   // meilleur score sauvegardé (fichier JSON)
 
         if (resultText != null)
         {
@@ -119,7 +117,7 @@ public class LevelManager : MonoBehaviour
         if (scoreText != null)
             scoreText.text = "Score : " + score;
         if (bestText != null)
-            bestText.text = "Meilleur : " + bestScore;
+            bestText.text = "Meilleur : " + best;
 
         //on ne débloque que si on gagne son niveau le plus avancé (sinon rejouer le niveau 1 en boucle débloquerait tout)
         bool newestLevel = level != null && EquipmentManager.Instance != null
@@ -140,9 +138,13 @@ public class LevelManager : MonoBehaviour
 
         // partie classée (pas l'entraînement) : on propose d'enregistrer le score
         if (!IsTraining && NameEntry.Instance != null && difficulty != null)
-            NameEntry.Instance.Open(score, difficulty.displayName);
+            NameEntry.Instance.Open(score, difficulty.displayName, levelName);
 
-        if (Leaderboard.Instance != null) Leaderboard.Instance.Show();
+        if (Leaderboard.Instance != null)
+        {
+            if (!IsTraining) Leaderboard.Instance.SetLevel(levelName); // Classement du niveau joué (pour le menu)
+            Leaderboard.Instance.Show();
+        }
     }
 
     // fin du niveau avant le timer (joueur vaincu)

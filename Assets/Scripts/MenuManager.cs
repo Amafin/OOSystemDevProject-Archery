@@ -199,6 +199,7 @@ public class MenuManager : MonoBehaviour
         {
             LevelData l = levels[levelIndex];
             if (levelText != null) levelText.text = "Level " + (levelIndex + 1) + "/" + levels.Length + " - " + l.displayName;
+            if (Leaderboard.Instance != null && !d.isTraining) Leaderboard.Instance.SetLevel(l.displayName);   // le classement suit le niveau choisi
         }
 
         // arc

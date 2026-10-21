@@ -7,6 +7,7 @@ public class ScoreEntry
     public string playerName;
     public int score;
     public string difficulty;
+    public string level; // nom du niveau joué (classement par niveau)
 }
 
 // tout ce qui est sauvegardé dans le fichier JSON

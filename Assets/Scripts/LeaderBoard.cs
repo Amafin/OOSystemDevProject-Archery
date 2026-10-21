@@ -3,14 +3,17 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-// affiche les meilleurs scores, du meilleur au moins bon
+// affiche les meilleurs scores d'un niveau, du meilleur au moins bon
 public class Leaderboard : MonoBehaviour
 {
     public static Leaderboard Instance;
 
+    public TextMeshProUGUI titleText;  // "Leaderboard - Initiation"
     public TextMeshProUGUI listText; // le texte de la tablette
     public int maxLines = 10;  // nombre de lignes affichées
     public GameObject panel;   // la tablette entière (LeaderboardPanel)
+
+    string currentLevel;   // niveau affiché (null = tous les niveaux)
 
     private void Awake()
     {
@@ -33,12 +36,26 @@ public class Leaderboard : MonoBehaviour
         if (panel != null) panel.SetActive(false);
     }
 
+    // change le niveau affiché (appelée par le menu et en fin de partie)
+    public void SetLevel(string level)
+    {
+        currentLevel = level;
+        Refresh();
+    }
+
     public void Refresh()
     {
+        if (titleText != null)
+            titleText.text = string.IsNullOrEmpty(currentLevel) ? "Leaderboard" : "Leaderboard - " + currentLevel;
+
         if (listText == null) return;
 
+        // on ne garde que les scores du niveau affiché
+        List<ScoreEntry> sorted = new List<ScoreEntry>();
+        foreach (ScoreEntry e in SaveSystem.Data.scores)
+            if (string.IsNullOrEmpty(currentLevel) || e.level == currentLevel) sorted.Add(e);
+
         // copie triée : le classement reste juste même si le fichier a été modifié à la main
-        List<ScoreEntry> sorted = new List<ScoreEntry>(SaveSystem.Data.scores);
         sorted.Sort((a, b) => b.score.CompareTo(a.score));
 
         StringBuilder sb = new StringBuilder();
