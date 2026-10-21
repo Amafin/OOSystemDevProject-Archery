@@ -10,6 +10,7 @@ public class Leaderboard : MonoBehaviour
 
     public TextMeshProUGUI listText; // le texte de la tablette
     public int maxLines = 10;  // nombre de lignes affichées
+    public GameObject panel;   // la tablette entière (LeaderboardPanel)
 
     private void Awake()
     {
@@ -19,6 +20,17 @@ public class Leaderboard : MonoBehaviour
     private void Start()
     {
         Refresh();
+    }
+
+    public void Show()
+    {
+        if (panel != null) panel.SetActive(true);
+        Refresh();   // à jour à chaque affichage
+    }
+
+    public void Hide()
+    {
+        if (panel != null) panel.SetActive(false);
     }
 
     public void Refresh()

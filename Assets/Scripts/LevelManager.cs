@@ -38,6 +38,8 @@ public class LevelManager : MonoBehaviour
     
     public void StartLevel()
     {
+        if (Leaderboard.Instance != null) Leaderboard.Instance.Hide();
+
         if (NameEntry.Instance != null) NameEntry.Instance.Close();
         if (resultPanel != null) resultPanel.SetActive(false);   // caché pendant la partie
 
@@ -93,6 +95,7 @@ public class LevelManager : MonoBehaviour
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
         if (MenuManager.Instance != null) MenuManager.Instance.ShowMenu();
+        if (Leaderboard.Instance != null) Leaderboard.Instance.Show();
     }
 
     void EndLevel(bool defeated = false)
@@ -131,6 +134,8 @@ public class LevelManager : MonoBehaviour
         // partie classée (pas l'entraînement) : on propose d'enregistrer le score
         if (!IsTraining && NameEntry.Instance != null && difficulty != null)
             NameEntry.Instance.Open(score, difficulty.displayName);
+
+        if (Leaderboard.Instance != null) Leaderboard.Instance.Show();
     }
 
     // fin du niveau avant le timer (joueur vaincu)
