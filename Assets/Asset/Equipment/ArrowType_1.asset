@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ddad1a93affcb49a1d9d667cce40bf, type: 3}
   m_Name: ArrowType_1
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
-  displayName: Standard
+  displayName: Hunter's Arrow
   description: "Une fl\xE8che plus rapide. Sa trajectoire est un peu plus tendue."
   prefab: {fileID: 4390092440139158631, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
   speedMultiplier: 1.15

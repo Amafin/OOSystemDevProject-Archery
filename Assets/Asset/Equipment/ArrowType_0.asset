@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ddad1a93affcb49a1d9d667cce40bf, type: 3}
   m_Name: ArrowType_0
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
-  displayName: Standard
-  description: "Une fl\xE8che simple en bois. Sa trajectoire retombe vite : visez
-    un peu au-dessus de la cible."
+  displayName: Wooden Arrow
+  description: 'A simple wooden arrow. It drops quickly: aim slightly above the target.'
   prefab: {fileID: 4390092440139158631, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
   speedMultiplier: 1
   gravityFactor: 1

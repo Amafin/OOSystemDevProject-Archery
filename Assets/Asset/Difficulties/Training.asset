@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6dc7d58bc7159346b7497563ae83e6b, type: 3}
   m_Name: Training
   m_EditorClassIdentifier: Assembly-CSharp::DifficultySettings
-  displayName: Easy
+  displayName: Training
   levelDuration: 90
   tiers: 140000003200000064000000
   groundCount: 4

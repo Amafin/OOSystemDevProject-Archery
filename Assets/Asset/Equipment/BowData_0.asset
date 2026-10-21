@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d14c8ad94b723f4096d3ce61eca5252, type: 3}
   m_Name: BowData_0
   m_EditorClassIdentifier: Assembly-CSharp::BowData
-  displayName: "Arc d'entra\xEEnement"
+  displayName: Training Bow
   description: "Arc l\xE9ger pour faire ses premiers pas dans l\u2019ar\xE8ne. Facile
     \xE0 tendre, mais peu puissant."
   prefab: {fileID: 995658583785166563, guid: 83f23c0fc22f57e4780f8ad4c5c17be0, type: 3}
