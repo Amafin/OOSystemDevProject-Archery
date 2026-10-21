@@ -100,6 +100,7 @@ public class LevelManager : MonoBehaviour
 
     void EndLevel(bool defeated = false)
     {
+        if (MenuManager.Instance != null) MenuManager.Instance.SetLecternVisible(true);   // pour saisir son nom
         int tier = ScoreManager.Instance.TierReached;
         int score = ScoreManager.Instance.Score;
 

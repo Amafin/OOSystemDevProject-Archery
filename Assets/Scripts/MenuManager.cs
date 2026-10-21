@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviour
     [Header("Panneaux")]
     public GameObject menuPanel; // le menu principal
     public GameObject trainingPanel; // le bouton "Quitter" visible pendant l'entraînement
+    public GameObject lectern;   // le pupitre 3D
 
     [Header("Difficultés (dans l'ordre affiché)")]
     public DifficultySettings[] difficulties;// Entraînement, Facile, Normal, Difficile
@@ -94,15 +95,24 @@ public class MenuManager : MonoBehaviour
     void ChangeBow(int step)
     {
         EquipmentManager eq = EquipmentManager.Instance;
-        bowIndex = Wrap(bowIndex + step, eq.bows.Length);
-        eq.SelectBow(eq.bows[bowIndex]); // refusé tout seul s'il est verrouillé
+        // on avance jusqu'au prochain arc débloqué (au pire on revient au même)
+        for (int i = 0; i < eq.bows.Length; i++)
+        {
+            bowIndex = Wrap(bowIndex + step, eq.bows.Length);
+            if (eq.IsUnlocked(eq.bows[bowIndex])) break;
+        }
+        eq.SelectBow(eq.bows[bowIndex]);
         Refresh();
     }
 
     void ChangeArrow(int step)
     {
         EquipmentManager eq = EquipmentManager.Instance;
-        arrowIndex = Wrap(arrowIndex + step, eq.arrows.Length);
+        for (int i = 0; i < eq.arrows.Length; i++)
+        {
+            arrowIndex = Wrap(arrowIndex + step, eq.arrows.Length);
+            if (eq.IsUnlocked(eq.arrows[arrowIndex])) break;
+        }
         eq.SelectArrow(eq.arrows[arrowIndex]);
         Refresh();
     }
@@ -142,5 +152,10 @@ public class MenuManager : MonoBehaviour
     int Wrap(int i, int count)
     {
         return (i % count + count) % count;
+    }
+
+    public void SetLecternVisible(bool visible)
+    {
+        if (lectern != null) lectern.SetActive(visible);
     }
 }
