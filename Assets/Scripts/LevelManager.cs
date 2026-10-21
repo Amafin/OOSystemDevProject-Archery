@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     public TextMeshProUGUI unlockText; // "Nouvel équipement : ..." dans le panneau de résultats
     public bool IsTraining => difficulty != null && difficulty.isTraining;  // vrai si la difficulté choisie est le mode entraînement
     public LevelData level;   // niveau joué (assigné par le menu, ou à la main pour tester sans menu)
+    public GameObject hud;   // ScoreGauge (jauge, timer, vie) : visible seulement pendant la partie
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class LevelManager : MonoBehaviour
     }
     private void Start()
     {
+        if (hud != null) hud.SetActive(false);   // caché dans le menu
         // s'il y a un menu, c'est lui qui lance la partie
         if (MenuManager.Instance == null) StartLevel();
     }
@@ -54,6 +56,7 @@ public class LevelManager : MonoBehaviour
         timeLeft = duration;
         ScoreManager.Instance.ResetScore();
         if (PlayerHealth.Instance != null) PlayerHealth.Instance.ResetHealth();
+        if (hud != null) hud.SetActive(true);
         IsRunning = true;
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.SpawnAll();
@@ -89,17 +92,20 @@ public class LevelManager : MonoBehaviour
     // arrête tout et revient au menu
     public void ReturnToMenu()
     {
+        if (hud != null) hud.SetActive(false);   // le score final est sur le panneau de résultats
         if (NameEntry.Instance != null) NameEntry.Instance.Close();
         IsRunning = false;
         if (resultPanel != null) resultPanel.SetActive(false);
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
+        Arrow.ClearAll();   // plus de flèches qui traînent entre deux parties
         if (MenuManager.Instance != null) MenuManager.Instance.ShowMenu();
         if (Leaderboard.Instance != null) Leaderboard.Instance.Show();
     }
 
     void EndLevel(bool defeated = false)
     {
+        if (hud != null) hud.SetActive(false);   // le score final est sur le panneau de résultats
         if (MenuManager.Instance != null) MenuManager.Instance.SetLecternVisible(true);   // pour saisir son nom
 
         int tier = ScoreManager.Instance.TierReached;
@@ -135,6 +141,7 @@ public class LevelManager : MonoBehaviour
 
         if (TargetSpawner.Instance != null) TargetSpawner.Instance.ClearAll();
         if (GladiatorSpawner.Instance != null) GladiatorSpawner.Instance.StopAndClear();
+        Arrow.ClearAll();   // plus de flèches qui traînent entre deux parties
 
         // partie classée (pas l'entraînement) : on propose d'enregistrer le score
         if (!IsTraining && NameEntry.Instance != null && difficulty != null)

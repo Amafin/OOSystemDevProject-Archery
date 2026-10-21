@@ -1489,6 +1489,7 @@ MonoBehaviour:
   difficulty: {fileID: 11400000, guid: db3b8f7f38c92a542b15d469936490d9, type: 2}
   unlockText: {fileID: 1009265378}
   level: {fileID: 11400000, guid: e72b652d8c5eba84bb8070e65c90f6d9, type: 2}
+  hud: {fileID: 79461487}
 --- !u!4 &415413394
 Transform:
   m_ObjectHideFlags: 0

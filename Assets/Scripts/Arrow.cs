@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
@@ -7,6 +9,9 @@ public class Arrow : MonoBehaviour
     public ArrowType type;   // le type de cette flèche
     public float lifeTime = 20f;
     public float touchLifeTime = 2f;
+    public float dropLifeTime = 5f;   // flèche lâchée sans être tirée : disparaît après ce délai
+
+    static readonly List<Arrow> all = new List<Arrow>();   // toutes les flèches présentes dans la scène
     public Collider grabZone;   // la zone de saisie, éteinte en vol
 
     public XRGrabInteractable Grab { get; private set; }
@@ -23,8 +28,46 @@ public class Arrow : MonoBehaviour
         Grab = GetComponent<XRGrabInteractable>();
     }
 
+    private void OnEnable() { all.Add(this); }
+    private void OnDisable() { all.Remove(this); }
+
+    private void Start()
+    {
+        Grab.selectExited.AddListener(OnReleased);
+        Grab.selectEntered.AddListener(OnGrabbed);
+    }
+
+    // lâchée sans être encochée ni tirée : on la retire après un délai
+    void OnReleased(SelectExitEventArgs args)
+    {
+        if (!IsNocked && !flying) Invoke(nameof(DropDestroy), dropLifeTime);
+    }
+
+    // reprise en main avant le délai : on annule
+    void OnGrabbed(SelectEnterEventArgs args)
+    {
+        CancelInvoke(nameof(DropDestroy));
+    }
+
+    void DropDestroy()
+    {
+        if (!IsNocked && !flying) Destroy(gameObject);
+    }
+
+    // fin de partie : on retire toutes les flèches sauf celle tenue en main ou encochée
+    public static void ClearAll()
+    {
+        for (int i = all.Count - 1; i >= 0; i--)
+        {
+            Arrow a = all[i];
+            if (a.IsNocked || a.Grab.isSelected) continue;
+            Destroy(a.gameObject);
+        }
+    }
+
     public void Nock()
     {
+        CancelInvoke(nameof(DropDestroy));   // encochée : elle ne doit pas disparaître
         IsNocked = true;
         Grab.enabled = false;
         rb.isKinematic = true;
