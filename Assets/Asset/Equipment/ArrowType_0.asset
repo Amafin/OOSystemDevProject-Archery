@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5ddad1a93affcb49a1d9d667cce40bf, type: 3}
+  m_Name: ArrowType_0
+  m_EditorClassIdentifier: Assembly-CSharp::ArrowType
+  displayName: Wooden Arrow
+  prefab: {fileID: 4743359466983273845, guid: 8a375c909a2ad434c9df44e28f43e63e, type: 3}
+  speedMultiplier: 1
+  gravityFactor: 1.2
+  unlockOrder: 0

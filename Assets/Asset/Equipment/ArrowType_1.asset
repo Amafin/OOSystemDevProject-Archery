@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5ddad1a93affcb49a1d9d667cce40bf, type: 3}
+  m_Name: ArrowType_1
+  m_EditorClassIdentifier: Assembly-CSharp::ArrowType
+  displayName: Hunter's Arrow
+  prefab: {fileID: 9044489690294092572, guid: 60a51b6054a3d5f46bfd7b809e83d278, type: 3}
+  speedMultiplier: 1.1
+  gravityFactor: 1
+  unlockOrder: 1
