@@ -78,7 +78,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         if (scoreText != null)
-            scoreText.text = Score + " / " + maxScore;
+            scoreText.text = Score.ToString();
     }
 
     // permet de changer les paliers à la volée (par exemple selon la difficulté)

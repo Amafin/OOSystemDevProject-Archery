@@ -23,7 +23,6 @@ public class TargetSpawner : MonoBehaviour
     private DifficultySettings settings;    // paramètres de difficulté appliqués
     LevelData level;   // niveau en cours (nombre de cibles, tailles aléatoires)
 
-    // chaque cible présente et le point qu'elle occupe (null pour les volantes)
     readonly Dictionary<GameObject, Transform> active = new Dictionary<GameObject, Transform>();
 
     private void Awake()
@@ -52,7 +51,7 @@ public class TargetSpawner : MonoBehaviour
         if (standTargetPrefab == null || point == null) return;
 
         GameObject obj = Instantiate(standTargetPrefab, point.position, point.rotation);
-        if (settings != null) obj.transform.localScale *= settings.targetScale;   // taille selon la difficulté
+        obj.transform.localScale *= TargetScale();   // taille selon la difficulté (+ aléatoire selon le niveau)
         Register(obj, point, SpawnGround);
     }
 
@@ -61,7 +60,7 @@ public class TargetSpawner : MonoBehaviour
         if (flyingTargetPrefab == null || arenaCenter == null) return;
 
         GameObject obj = Instantiate(flyingTargetPrefab);
-        if (settings != null) obj.transform.localScale *= settings.targetScale;   // taille selon la difficulté
+        obj.transform.localScale *= TargetScale();   // taille selon la difficulté (+ aléatoire selon le niveau)
 
         TargetMover mover = obj.GetComponent<TargetMover>();
         if (mover != null) mover.Setup(arenaCenter, Random.Range(0f, 360f), settings); // n'importe où autour

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f33c694cca77b0b40b9c373c33b1eedb, type: 3}
   m_Name: Level_Training
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  displayName: Level
+  displayName: Training
   description: Free shooting on fixed targets. No timer, no progression.
   unlockOrder: 0
   groundCount: 4
