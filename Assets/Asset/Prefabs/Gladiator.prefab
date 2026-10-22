@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1484780891873333751}
   serializedVersion: 2
   m_LocalRotation: {x: -0.6536654, y: -0.5169808, z: 0.40281913, w: 0.3784033}
-  m_LocalPosition: {x: 0.056, y: -0.036, z: -0.118}
+  m_LocalPosition: {x: 0.078, y: -0.038, z: -0.109}
   m_LocalScale: {x: 0.22, y: 0.4, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,6 +179,9 @@ MonoBehaviour:
   killPoints: 5
   speed: 1.5
   attackRange: 1.5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
   attackInterval: 2
   attackDamage: 5
   hitDelay: 0.4
@@ -1080,7 +1083,7 @@ CapsuleCollider:
   m_Radius: 0.06
   m_Height: 0.25
   m_Direction: 1
-  m_Center: {x: 0, y: -0.05, z: 0}
+  m_Center: {x: 0, y: -0.05, z: 0.01}
 --- !u!1 &4748300435274141548 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6859734995054323733, guid: 17d0712db44eddc42b85f752c3b7cfc7, type: 3}
@@ -1200,7 +1203,7 @@ CapsuleCollider:
   m_Radius: 0.06
   m_Height: 0.25
   m_Direction: 1
-  m_Center: {x: -0.01, y: -0.04, z: 0}
+  m_Center: {x: -0.01, y: -0.04, z: 0.01}
 --- !u!1 &8433709055016787075 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7772503801933282300, guid: 17d0712db44eddc42b85f752c3b7cfc7, type: 3}

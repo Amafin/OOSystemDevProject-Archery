@@ -12,6 +12,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     [Header("Déplacement")]
     public float speed = 2f;  // vitesse de marche (m/s)
     public float attackRange = 1.5f; // distance au joueur où il s'arrête pour attaquer (m)
+    public LayerMask groundMask = 1;   // ce qui compte comme sol pour la descente 
 
     [Header("Attaque")]
     public float attackInterval = 2f; // un coup toutes les X secondes
@@ -109,16 +110,36 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     }
 
     // descente des marches
+    // descente des marches : on avance à l'horizontale, la hauteur suit le sol
     void FollowPath()
     {
         Transform next = path[pathIndex];
-        transform.position = Vector3.MoveTowards(transform.position, next.position, speed * Time.deltaTime);
+
+        Vector3 target = next.position;
+        target.y = transform.position.y;   // on se déplace à plat, la hauteur est gérée par SnapToGround
+        transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        SnapToGround();
         FaceTowards(next.position);
 
-        if (Vector3.Distance(transform.position, next.position) < 0.05f)
+        // point atteint (distance à l'horizontale)
+        Vector3 flat = next.position - transform.position;
+        flat.y = 0f;
+        if (flat.magnitude < 0.05f)
         {
             pathIndex++;
             if (pathIndex >= path.Length) StartChasing();
+        }
+    }
+
+    // pose les pieds sur la marche juste en dessous
+    void SnapToGround()
+    {
+        Vector3 origin = transform.position + Vector3.up * 1f;   // on part d'un peu au-dessus
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 2f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            Vector3 p = transform.position;
+            p.y = Mathf.Lerp(p.y, hit.point.y, 15f * Time.deltaTime);   // lissé pour ne pas sautiller d'une marche à l'autre
+            transform.position = p;
         }
     }
 
