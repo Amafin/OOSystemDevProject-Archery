@@ -16,6 +16,7 @@ public class EquipmentManager : MonoBehaviour
     public ArrowType SelectedArrow { get; private set; }
 
     Bow currentBow;   // l'arc présent dans la scène
+    public Bow CurrentBow => currentBow;   // l'arc présent dans la scène, lu par AimPreview
 
     private void Awake()
     {

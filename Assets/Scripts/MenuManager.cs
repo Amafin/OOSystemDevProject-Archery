@@ -29,7 +29,7 @@ public class MenuManager : MonoBehaviour
     [Header("Other")]
     public Slider volumeSlider;
     public Button playButton;
-
+    public TextMeshProUGUI aimHelpText;   // texte du bouton "Aim help: ON / OFF"
     int difficultyIndex;
     int levelIndex;
     int bowIndex;
@@ -164,6 +164,14 @@ public class MenuManager : MonoBehaviour
         SaveSystem.Save();
     }
 
+    // bouton Aim help : affiche ou cache l'aide à la visée (enregistré dans la sauvegarde)
+    public void ToggleAimHelp()
+    {
+        SaveSystem.Data.aimHelp = !SaveSystem.Data.aimHelp;
+        SaveSystem.Save();
+        Refresh();
+    }
+
     // bouton Reset progress : efface la sauvegarde et remet le menu à zéro (tests / démo)
     public void ResetProgress()
     {
@@ -215,6 +223,8 @@ public class MenuManager : MonoBehaviour
         int lockedArrows = 0;
         foreach (ArrowType a in eq.arrows) if (!eq.IsUnlocked(a)) lockedArrows++;
         if (arrowText != null) arrowText.text = arrow.displayName;
+
+        if (aimHelpText != null) aimHelpText.text = "Aim help: " + (SaveSystem.Data.aimHelp ? "ON" : "OFF");
 
         // sécurité : Play grisé si l'équipement n'est pas débloqué
         if (playButton != null)
