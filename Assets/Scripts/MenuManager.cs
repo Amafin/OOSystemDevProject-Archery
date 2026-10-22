@@ -68,6 +68,8 @@ public class MenuManager : MonoBehaviour
     public void ShowMenu()
     {
         SetLecternVisible(true);
+        FaceTargetOnStart face = FindAnyObjectByType<FaceTargetOnStart>();
+        if (face != null) face.FaceTarget();   // le joueur se retrouve face au pupitre
         if (menuPanel != null) menuPanel.SetActive(true);
         if (trainingPanel != null) trainingPanel.SetActive(false);
         Refresh();
