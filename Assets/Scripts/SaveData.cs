@@ -18,4 +18,5 @@ public class SaveData
     public List<ScoreEntry> scores = new List<ScoreEntry>(); // le classement
     public float volume = 1f;   // volume général
     public string lastName = "";   // dernier nom saisi, proposé à la partie suivante
+    public bool aimHelp = true;   // aide à la visée affichée ou non (bouton du menu)
 }

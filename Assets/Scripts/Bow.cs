@@ -37,6 +37,8 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     Transform pullingHand;
     InputAction pullingGrip;
     Arrow nockedArrow;
+    public Arrow NockedArrow => nockedArrow;   // la flèche encochée        
+    public bool canProcess => isActiveAndEnabled;// une seule main peut tenir l'arc
 
     private void Awake()
     {
@@ -65,8 +67,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         if (grab != null) grab.selectFilters.Remove(this);
     }
 
-    // une seule main peut tenir l'arc
-    public bool canProcess => isActiveAndEnabled;
+
 
     public bool Process(IXRSelectInteractor interactor, IXRSelectInteractable interactable)
     {
@@ -206,7 +207,7 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         nockedArrow = null;
     }
 
-    Vector3 ShootDirection()
+    public Vector3 ShootDirection()
     {
         return -transform.TransformDirection(pullAxisLocal);
     }
