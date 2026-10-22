@@ -304,7 +304,7 @@ MonoBehaviour:
   maxDraw: 0.5
   bendBlendShapeIndex: 0
   returnSpeed: 15
-  maxArrowSpeed: 40
+  maxArrowSpeed: 25
   minDrawToFire: 0.1
 --- !u!1001 &7718527505297606673
 PrefabInstance:

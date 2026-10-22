@@ -18,5 +18,5 @@ MonoBehaviour:
   groundCount: 4
   flyingCount: 0
   randomSize: 0
-  sizeRange: {x: 0.6, y: 1.2}
+  sizeRange: {x: 0.5, y: 1.2}
   maxGladiators: 1

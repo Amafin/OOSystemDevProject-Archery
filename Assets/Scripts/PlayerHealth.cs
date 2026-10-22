@@ -12,6 +12,12 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 100;
     public bool endLevelOnDeath = true;  // à 0 PV, le niveau s'arrête
 
+    [Header("Vibration")]
+    public float vibrationStrength = 0.6f;   // force de la vibration (0 à 1)
+    public float vibrationDuration = 0.2f;   // durée d'une vibration (s)
+    public float vibrationCooldown = 1.5f;     // au moins X secondes entre deux vibrations, même avec plusieurs gladiateurs
+    float lastVibration = -10f;
+
     [Header("Affichage (optionnel)")]
     public Image healthFill;   // barre de vie
     public TextMeshProUGUI healthText;
@@ -54,7 +60,12 @@ public class PlayerHealth : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(DamageFeedback());   // on voit le coup, en plus de la vibration
 
-        if (PlayerRig.Instance != null) PlayerRig.Instance.Vibrate(0.8f, 0.3f); // on sent le coup
+        // on sent le coup, mais pas en continu si plusieurs gladiateurs frappent
+        if (PlayerRig.Instance != null && Time.time - lastVibration >= vibrationCooldown)
+        {
+            PlayerRig.Instance.Vibrate(vibrationStrength, vibrationDuration);
+            lastVibration = Time.time;
+        }
 
         if (Health <= 0 && endLevelOnDeath && level != null)
             level.ForceEnd(true);   // vaincu

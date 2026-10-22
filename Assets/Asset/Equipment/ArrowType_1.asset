@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArrowType
   displayName: Hunter's Arrow
   prefab: {fileID: 9044489690294092572, guid: 60a51b6054a3d5f46bfd7b809e83d278, type: 3}
-  speedMultiplier: 1.15
-  gravityFactor: 0.9
+  speedMultiplier: 1.1
+  gravityFactor: 1
   unlockOrder: 1

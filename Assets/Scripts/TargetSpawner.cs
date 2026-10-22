@@ -22,6 +22,7 @@ public class TargetSpawner : MonoBehaviour
     public float respawnDelay = 1f;
     private DifficultySettings settings;    // paramètres de difficulté appliqués
     LevelData level;   // niveau en cours (nombre de cibles, tailles aléatoires)
+    public float reappearDelay = 0.5f;   // pause entre la disparition d'une cible et l'apparition de la suivante
 
     readonly Dictionary<GameObject, Transform> active = new Dictionary<GameObject, Transform>();
 
@@ -95,7 +96,7 @@ public class TargetSpawner : MonoBehaviour
 
     IEnumerator RespawnLater(System.Action respawn)
     {
-        yield return new WaitForSeconds(respawnDelay);
+        yield return new WaitForSeconds(respawnDelay + reappearDelay);   // la cible touchée disparaît, puis pause avant la suivante
 
         LevelManager level = LevelManager.Instance;
         if (level != null && !level.IsRunning) yield break;
