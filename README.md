@@ -10,12 +10,8 @@ The player stands on a platform in the middle of a Roman arena, shoots at fixed 
 2. [Controls](#controls)
 3. [Game rules](#game-rules)
 4. [Installation](#installation)
-5. [Building for Meta Quest](#building-for-meta-quest)
-6. [Project structure](#project-structure)
-7. [Architecture](#architecture)
-8. [Save system](#save-system)
-9. [Git workflow](#git-workflow)
-10. [Team](#team)
+5. [Project structure](#project-structure)
+6. [Save system](#save-system)
 
 ---
 
