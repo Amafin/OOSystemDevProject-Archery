@@ -29,6 +29,8 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     [Header("Son")]
     public AudioClip deathSound;                
     [Range(0f, 1f)] public float deathVolume = 1f;
+    public AudioClip attackSound;
+    [Range(0f, 1f)] public float attackVolume = 1f;
 
     public event System.Action<Gladiator> OnRemoved;  // le futur spawner sera prévenu
 
@@ -204,6 +206,8 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         {
             attackTimer = attackInterval;
             if (animator != null) animator.SetTrigger("Attack");
+
+            if(attackSound != null) AudioSource.PlayClipAtPoint(attackSound, transform.position, attackVolume);
             Invoke(nameof(DealDamage), hitDelay);  // l'épée touche un peu après le début du geste
         }
     }

@@ -13556,6 +13556,8 @@ MonoBehaviour:
   flashTime: 0.15
   overlayAlpha: 0.3
   overlayFade: 0.5
+  hurtSound: {fileID: 8300000, guid: 3acb1f38759b6514ba41118993880cfa, type: 3}
+  hurtVolume: 1
 --- !u!114 &2081024987
 MonoBehaviour:
   m_ObjectHideFlags: 0

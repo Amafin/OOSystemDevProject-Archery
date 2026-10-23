@@ -28,6 +28,9 @@ public class PlayerHealth : MonoBehaviour
     public float overlayAlpha = 0.35f; // opacité du rouge au moment du coup
     public float overlayFade = 0.5f; // temps pour que le rouge disparaisse
 
+    [Header("Son")]
+    public AudioClip hurtSound;                 
+    [Range(0f, 1f)] public float hurtVolume = 1f;
     public int Health { get; private set; }
 
     private void Awake()
@@ -60,6 +63,11 @@ public class PlayerHealth : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(DamageFeedback());   // on voit le coup, en plus de la vibration
 
+        if (hurtSound != null)
+        {
+            Vector3 earPos = Camera.main != null ? Camera.main.transform.position : transform.position;
+            AudioSource.PlayClipAtPoint(hurtSound, earPos, hurtVolume);
+        }
         // on sent le coup, mais pas en continu si plusieurs gladiateurs frappent
         if (PlayerRig.Instance != null && Time.time - lastVibration >= vibrationCooldown)
         {
