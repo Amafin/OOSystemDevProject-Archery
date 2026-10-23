@@ -1,10 +1,10 @@
 using UnityEngine;
 
-// fiche d'un arc : nom, description, prefab, ordre de déblocage
+// fiche d'un arc : nom, prefab, ordre de déblocage
 [CreateAssetMenu(fileName = "BowData", menuName = "Arena/Bow Data")]
 public class BowData : ScriptableObject
 {
-    public string displayName = "Arc d'entraînement";
+    public string displayName = "Training Bow";
     public Bow prefab; // le prefab de l'arc (BowLvl0...)
 
     [Header("Progression")]

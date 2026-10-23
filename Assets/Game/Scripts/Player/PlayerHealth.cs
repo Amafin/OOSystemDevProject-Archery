@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public static PlayerHealth Instance;   // accessible partout : PlayerHealth.Instance
 
     [Header("Vie")]
-    public int maxHealth = 100;
+    public int maxHealth = 80;
     public bool endLevelOnDeath = true;  // à 0 PV, le niveau s'arrête
 
     [Header("Vibration")]

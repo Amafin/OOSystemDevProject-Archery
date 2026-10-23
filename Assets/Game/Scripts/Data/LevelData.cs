@@ -7,7 +7,6 @@ public class LevelData : ScriptableObject
 {
     [Header("General")]
     public string displayName = "Level";
-    [TextArea] public string description;
     public int unlockOrder = 0; // 0 = débloqué dès le début
 
     [Header("Targets")]
