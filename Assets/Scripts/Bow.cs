@@ -30,6 +30,8 @@ public class Bow : MonoBehaviour, IXRSelectFilter
     [Header("Son")]
     public AudioClip shootSound;                 
     [Range(0f, 1f)] public float shootVolume = 1f;
+    
+    public float soundStartOffset = 0.05f;
     AudioSource audioSource;
 
     public float Draw01 { get; private set; } // tension de la corde de 0 à 1
@@ -58,9 +60,6 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         Transform attach = grab.attachTransform != null ? grab.attachTransform : transform;
         attachLocalRotation = Quaternion.Inverse(transform.rotation) * attach.rotation;
 
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 1f;   
     }
 
     private void Start()
@@ -209,19 +208,36 @@ public class Bow : MonoBehaviour, IXRSelectFilter
         pullingGrip = null;
         if (nockedArrow == null) return;
 
+        Arrow arrowToShoot = nockedArrow;
+        nockedArrow = null;           // libéré tout de suite : le son ne peut plus bloquer le tir
+
         if (stillHeld && Draw01 >= minDrawToFire)
         {
-            nockedArrow.Launch(ShootDirection() * Draw01 * maxArrowSpeed);
-
-            if (shootSound != null)
-                audioSource.PlayOneShot(shootSound, shootVolume);
+            arrowToShoot.Launch(ShootDirection() * Draw01 * maxArrowSpeed);
+            PlayShootSound();
         }
         else
         {
-            Destroy(nockedArrow.gameObject);
+            Destroy(arrowToShoot.gameObject);
+        }
+    }
+
+    void PlayShootSound()
+    {
+        if (shootSound == null) return;
+
+        // sécurité : on crée l'AudioSource si elle n'existe pas encore
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 1f;
         }
 
-        nockedArrow = null;
+        audioSource.clip = shootSound;
+        audioSource.volume = shootVolume;
+        audioSource.time = Mathf.Clamp(soundStartOffset, 0f, shootSound.length - 0.01f);
+        audioSource.Play();
     }
 
     public Vector3 ShootDirection()
