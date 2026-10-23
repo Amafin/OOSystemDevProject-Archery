@@ -188,6 +188,10 @@ MonoBehaviour:
   testGate: {fileID: 0}
   testDestination: {fileID: 0}
   animator: {fileID: 3477514359693976854}
+  deathSound: {fileID: 8300000, guid: 7192ebde5438d814da29da11535b617e, type: 3}
+  deathVolume: 1
+  attackSound: {fileID: 8300000, guid: 8f4595cabbbbc4644b8ec35f38c57cfb, type: 3}
+  attackVolume: 1
 --- !u!1001 &7000855839902898311
 PrefabInstance:
   m_ObjectHideFlags: 0
