@@ -12,6 +12,9 @@ public class Target : MonoBehaviour, IArrowHittable
     bool wasHit; // une cible ne compte qu'une fois
     float baseScale;   // taille de la cible à sa création, pour adapter le rayon si elle est agrandie
 
+    [Header("Son")]
+    public AudioClip hitSound;                  
+    [Range(0f, 1f)] public float hitVolume = 1f;
 
     private void Awake()
     {
@@ -27,6 +30,11 @@ public class Target : MonoBehaviour, IArrowHittable
         if (points <= 0) return;  // tranche ou bord : la cible reste en place
 
         wasHit = true;
+        
+
+        if(hitSound != null)
+            AudioSource.PlayClipAtPoint(hitSound, hitPoint, hitVolume);
+
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.AddPoints(points);
 

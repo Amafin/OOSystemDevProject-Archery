@@ -159,6 +159,8 @@ MonoBehaviour:
   center: {fileID: 2191743702932080815}
   radius: 0.6
   minFaceAlignment: 0.7
+  hitSound: {fileID: 8300000, guid: 3a70b14552d45434185b4a24df1c894c, type: 3}
+  hitVolume: 1
 --- !u!1 &8317942238253518735 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3704563456361051248, guid: dff2f46a6ab0b7b4db9c6dd1e38cb335, type: 3}

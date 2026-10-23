@@ -132,6 +132,8 @@ MonoBehaviour:
   center: {fileID: 3895972451730926255}
   radius: 0.6
   minFaceAlignment: 0.7
+  hitSound: {fileID: 8300000, guid: 3a70b14552d45434185b4a24df1c894c, type: 3}
+  hitVolume: 1
 --- !u!114 &7093253400841438669
 MonoBehaviour:
   m_ObjectHideFlags: 0

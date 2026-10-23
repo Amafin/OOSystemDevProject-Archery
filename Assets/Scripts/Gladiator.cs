@@ -26,6 +26,10 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     [Header("Animations (optionnel)")]
     public Animator animator;
 
+    [Header("Son")]
+    public AudioClip deathSound;                
+    [Range(0f, 1f)] public float deathVolume = 1f;
+
     public event System.Action<Gladiator> OnRemoved;  // le futur spawner sera prévenu
 
     // les 4 états possibles du gladiateur
@@ -227,6 +231,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         CancelInvoke(nameof(DealDamage)); // un coup en cours est annulé
         if (agent.enabled) agent.isStopped = true;
 
+        if(deathSound != null) AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume);
         if (ScoreManager.Instance != null) ScoreManager.Instance.AddPoints(killPoints);
         if (animator != null) animator.SetTrigger("Die");
 
