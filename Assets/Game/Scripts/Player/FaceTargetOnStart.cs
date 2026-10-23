@@ -67,6 +67,5 @@ public class FaceTargetOnStart : MonoBehaviour
 
         float angle = Vector3.SignedAngle(look, toTarget, Vector3.up);
         origin.RotateAroundCameraUsingOriginUp(angle);   // tourne autour de la tête, sans déplacer le joueur
-        Debug.Log("FaceTarget : rotation de " + angle.ToString("0") + "°");   // TEMP
     }
 }

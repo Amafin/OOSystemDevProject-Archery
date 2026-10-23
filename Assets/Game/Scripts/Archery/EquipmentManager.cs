@@ -92,12 +92,4 @@ public class EquipmentManager : MonoBehaviour
 
         return message;
     }
-
-    // clic droit sur le composant dans l'Inspector > "Reset progression"
-    [ContextMenu("Reset progression")]
-    void ResetProgression()
-    {
-        SaveSystem.ResetAll();
-        Debug.Log("Progression remise à zéro");
-    }
 }

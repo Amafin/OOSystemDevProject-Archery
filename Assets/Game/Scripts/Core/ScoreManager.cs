@@ -58,16 +58,19 @@ public class ScoreManager : MonoBehaviour
     {
         int maxScore = tiers[tiers.Length - 1];   // le dernier palier remplit la jauge
 
-        for (int i = 0; i < tierMarkers.Length; i++)
-        {
-            RectTransform bar = gaugeFill.rectTransform;
-            float height = bar.rect.height;
-            float y = -height / 2f + height * tiers[i] / maxScore;
-            tierMarkers[i].anchoredPosition = new Vector2(tierMarkers[i].anchoredPosition.x, y);
-        }
-
         if (gaugeFill != null)
         {
+            // marqueurs de paliers : placés à partir du bas réel de la jauge, où qu'elle soit dans le HUD
+            RectTransform bar = gaugeFill.rectTransform;
+            float height = bar.rect.height;
+            float bottom = bar.anchoredPosition.y - height * bar.pivot.y;   // position du bas de la jauge
+
+            for (int i = 0; i < tierMarkers.Length && i < tiers.Length; i++)
+            {
+                float y = bottom + height * tiers[i] / maxScore;
+                tierMarkers[i].anchoredPosition = new Vector2(tierMarkers[i].anchoredPosition.x, y);
+            }
+
             // attention float car division entière
             gaugeFill.fillAmount = Mathf.Clamp01((float)Score / maxScore);
 
@@ -78,7 +81,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         if (scoreText != null)
-            scoreText.text = Score.ToString();
+            scoreText.text = Score.ToString();   // seulement le score du joueur
     }
 
     // permet de changer les paliers à la volée (par exemple selon la difficulté)

@@ -12,27 +12,23 @@ public class Gladiator : MonoBehaviour, IArrowHittable
     [Header("Déplacement")]
     public float speed = 2f;  // vitesse de marche (m/s)
     public float attackRange = 1.5f; // distance au joueur où il s'arrête pour attaquer (m)
-    public LayerMask groundMask = 1;   // ce qui compte comme sol pour la descente 
+    public LayerMask groundMask = 1;   // ce qui compte comme sol pour la descente
 
     [Header("Attaque")]
     public float attackInterval = 2f; // un coup toutes les X secondes
     public int attackDamage = 5;  // pv perdus par coup
     public float hitDelay = 0.4f;   // délai entre le début de l'animation et le moment où l'épée touche
 
-    [Header("Test sans spawner")]
-    public Transform testGate; // Gate1
-    public Transform testDestination;  // ArenaCenter
-
     [Header("Animations (optionnel)")]
     public Animator animator;
 
     [Header("Son")]
-    public AudioClip deathSound;                
+    public AudioClip deathSound;
     [Range(0f, 1f)] public float deathVolume = 1f;
     public AudioClip attackSound;
     [Range(0f, 1f)] public float attackVolume = 1f;
 
-    public event System.Action<Gladiator> OnRemoved;  // le futur spawner sera prévenu
+    public event System.Action<Gladiator> OnRemoved;  // prévient le spawner quand le gladiateur meurt
 
     // les 4 états possibles du gladiateur
     enum State { Entering, Chasing, Attacking, Dead }
@@ -51,12 +47,6 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = false; // il ne s'active qu'une fois sur le sable
         health = maxHealth;
-    }
-
-    private void Start()
-    {
-        if (arenaCenter == null && testDestination != null)
-            Setup(testGate, testDestination, speed);
     }
 
     // appelée par le spawner juste après l'apparition
@@ -115,7 +105,6 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         return flat.magnitude;
     }
 
-    // descente des marches
     // descente des marches : on avance à l'horizontale, la hauteur suit le sol
     void FollowPath()
     {
@@ -207,7 +196,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
             attackTimer = attackInterval;
             if (animator != null) animator.SetTrigger("Attack");
 
-            if(attackSound != null) AudioSource.PlayClipAtPoint(attackSound, transform.position, attackVolume);
+            if (attackSound != null) AudioSource.PlayClipAtPoint(attackSound, transform.position, attackVolume);
             Invoke(nameof(DealDamage), hitDelay);  // l'épée touche un peu après le début du geste
         }
     }
@@ -235,7 +224,7 @@ public class Gladiator : MonoBehaviour, IArrowHittable
         CancelInvoke(nameof(DealDamage)); // un coup en cours est annulé
         if (agent.enabled) agent.isStopped = true;
 
-        if(deathSound != null) AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume);
+        if (deathSound != null) AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume);
         if (ScoreManager.Instance != null) ScoreManager.Instance.AddPoints(killPoints);
         if (animator != null) animator.SetTrigger("Die");
 

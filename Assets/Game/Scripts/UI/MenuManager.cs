@@ -95,7 +95,7 @@ public class MenuManager : MonoBehaviour
         if (menuPanel != null) menuPanel.SetActive(false);
         if (trainingPanel != null) trainingPanel.SetActive(d.isTraining);
 
-        LevelManager.Instance.StartLevel(d, chosenLevel);   //+ le niveau
+        LevelManager.Instance.StartLevel(d, chosenLevel);   // lance la partie avec la difficulté et le niveau choisis
     }
 
     // bouton Quit de l'entraînement
@@ -123,6 +123,7 @@ public class MenuManager : MonoBehaviour
         }
         Refresh();
     }
+
     // Arc
     public void NextBow() => ChangeBow(1);
     public void PrevBow() => ChangeBow(-1);
@@ -203,7 +204,7 @@ public class MenuManager : MonoBehaviour
 
         if (difficultyText != null) difficultyText.text = d.displayName;
 
-        //niveau (caché en entraînement)
+        // niveau (caché en entraînement)
         if (levelRow != null) levelRow.SetActive(!d.isTraining);
         if (levels.Length > 0)
         {
@@ -214,14 +215,10 @@ public class MenuManager : MonoBehaviour
 
         // arc
         BowData bow = eq.bows[bowIndex];
-        int lockedBows = 0;
-        foreach (BowData b in eq.bows) if (!eq.IsUnlocked(b)) lockedBows++;
         if (bowText != null) bowText.text = bow.displayName;
 
         // flèche
         ArrowType arrow = eq.arrows[arrowIndex];
-        int lockedArrows = 0;
-        foreach (ArrowType a in eq.arrows) if (!eq.IsUnlocked(a)) lockedArrows++;
         if (arrowText != null) arrowText.text = arrow.displayName;
 
         if (aimHelpText != null) aimHelpText.text = "Aim help: " + (SaveSystem.Data.aimHelp ? "ON" : "OFF");
