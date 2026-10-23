@@ -98,4 +98,4 @@ Defined in `LevelData` assets (`Assets/Asset/Levels`).
 - **Level 1, Initiation**: 4 fixed targets, 1 gladiator.
 - **Level 2, Moving Targets**: 3 fixed targets, 2 flying targets, 1 gladiator, random target sizes (×0.5 to ×1.2).
 - **Level 3, Gladiators**: 3 fixed targets, 2 flying targets, 1 gladiator, smaller random target sizes (×0.5 to ×1).
--
+- **Level 4, Last Stand**: 6 fixed targets, 3 flying targets, 2 gladiator, smaller random target sizes (×0.5 to ×0.8).
