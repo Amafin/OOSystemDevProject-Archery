@@ -463,6 +463,8 @@ MonoBehaviour:
   returnSpeed: 15
   maxArrowSpeed: 65
   minDrawToFire: 0.1
+  shootSound: {fileID: 8300000, guid: a4253bae81cfc614f84cc16fbe3f5614, type: 3}
+  shootVolume: 1
 --- !u!1 &6670958901580692115
 GameObject:
   m_ObjectHideFlags: 0
