@@ -21,6 +21,6 @@ MonoBehaviour:
   flyingHeight: {x: 2, y: 3.5}
   flyingSpeed: {x: 0.2, y: 0.5}
   flyingArc: {x: 10, y: 20}
-  gladiatorInterval: 20
+  gladiatorInterval: 15
   gladiatorSpeed: 1
   gladiatorFirstDelay: 10
